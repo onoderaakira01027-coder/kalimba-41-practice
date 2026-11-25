@@ -1,0 +1,4184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+  <title>41音カリンバ・練習ステーション（Seeds 3段式対応）</title>
+  <meta name="description" content="Seeds 41キー3段式クロマチックカリンバ専用のMIDI練習・ビジュアルガイド・チューナーアプリ" />
+  <meta name="theme-color" content="#f4efe6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="41音カリンバ" />
+  <meta name="application-name" content="41音カリンバ" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%23c38554'/%3E%3Cstop offset='100%25' stop-color='%237a4523'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='41' text-anchor='middle' font-family='sans-serif' font-size='28' font-weight='800' fill='%23ffffff'%3E41%3C/text%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --bg: #f4efe6;
+      --bg-subtle: #ebe3d5;
+      --surface: #ffffff;
+      --surface-soft: #faf7f2;
+      --border: #dfd6c7;
+      --border-strong: #c9bba6;
+      --text: #2a2118;
+      --text-muted: #6f6254;
+
+      --tier-top: #0284c7;
+      --tier-top-bg: #e0f2fe;
+      --tier-top-glow: rgba(2, 132, 199, 0.45);
+
+      --tier-mid: #d97706;
+      --tier-mid-bg: #fef3c7;
+      --tier-mid-glow: rgba(217, 119, 6, 0.5);
+
+      --tier-low: #059669;
+      --tier-low-bg: #d1fae5;
+      --tier-low-glow: rgba(5, 150, 105, 0.45);
+
+      --active-hit: #e11d48;
+      --active-hit-glow: rgba(225, 29, 72, 0.55);
+      --next-ring: #0ea5e9;
+
+      --wood-top: #c38554;
+      --wood-mid: #a46438;
+      --wood-dark: #7a4523;
+      --wood-edge: #5d3217;
+
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-sm: 0 2px 8px rgba(42, 33, 24, 0.06);
+      --shadow-md: 0 8px 24px rgba(42, 33, 24, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px;
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Meiryo", sans-serif;
+      background: radial-gradient(circle at top center, #fbf8f3 0%, var(--bg) 70%);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .app-shell {
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 12px 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, var(--wood-top), var(--wood-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: -0.5px;
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.35), 0 2px 6px rgba(122,69,35,0.28);
+      flex-shrink: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .brand-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 1px;
+    }
+
+    .topbar-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .seg-group {
+      display: inline-flex;
+      background: var(--bg-subtle);
+      border-radius: 9px;
+      padding: 3px;
+      border: 1px solid var(--border);
+    }
+
+    .seg-btn {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 9px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .seg-btn.active {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 13px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.08s ease, background 0.15s ease, box-shadow 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: var(--surface-soft);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .btn:active:not(:disabled) { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .btn-primary { background: #1f7a53; border-color: #196343; color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: #196645; }
+
+    .btn-danger { background: #be123c; border-color: #9f1239; color: #fff; }
+    .btn-danger:hover:not(:disabled) { background: #9f1239; }
+
+    .btn-accent { background: #0369a1; border-color: #075985; color: #fff; }
+    .btn-accent:hover:not(:disabled) { background: #075985; }
+
+    .btn-amber { background: #b45309; border-color: #92400e; color: #fff; }
+    .btn-amber:hover:not(:disabled) { background: #92400e; }
+
+    .btn-sm { font-size: 12px; padding: 5px 10px; border-radius: 8px; }
+
+    .tuner-bar {
+      display: none;
+      background: #231d17;
+      color: #faf6f0;
+      border-radius: var(--radius-md);
+      padding: 12px 16px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid #3c3127;
+    }
+    .tuner-bar.open { display: block; }
+
+    .tuner-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .tuner-readout {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+    }
+
+    .tuner-note-big {
+      font-size: 28px;
+      font-weight: 800;
+      color: #34d399;
+      min-width: 72px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tuner-kalimba-tag {
+      font-size: 13px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 6px;
+      background: rgba(255,255,255,0.12);
+      color: #fde68a;
+    }
+
+    .tuner-cents {
+      font-size: 14px;
+      font-weight: 700;
+      color: #e5ddd1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tuner-meter {
+      position: relative;
+      height: 12px;
+      background: #3d332a;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .tuner-meter-center {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: rgba(255,255,255,0.35);
+      transform: translateX(-1px);
+    }
+
+    .tuner-pointer {
+      position: absolute;
+      top: 1px;
+      bottom: 1px;
+      left: 50%;
+      width: 8px;
+      border-radius: 999px;
+      background: #34d399;
+      transform: translateX(-4px);
+      transition: left 0.06s linear, background 0.12s ease;
+    }
+
+    .stage-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hud-strip {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr auto;
+      gap: 10px;
+      align-items: center;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 10px 14px;
+    }
+
+    .hud-now, .hud-next {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .hud-label {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .hud-note-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 58px;
+      height: 44px;
+      padding: 0 10px;
+      border-radius: 10px;
+      background: var(--bg-subtle);
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+
+    .hud-note-pill.tier-top { background: var(--tier-top-bg); color: #0369a1; border: 2px solid var(--tier-top); }
+    .hud-note-pill.tier-mid { background: var(--tier-mid-bg); color: #b45309; border: 2px solid var(--tier-mid); }
+    .hud-note-pill.tier-low { background: var(--tier-low-bg); color: #047857; border: 2px solid var(--tier-low); }
+    .hud-note-pill.out-range { background: #ffe4e6; color: #be123c; border: 2px solid #e11d48; }
+
+    .hud-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .hud-badges { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: var(--bg-subtle);
+      color: var(--text);
+    }
+
+    .badge-top { background: var(--tier-top-bg); color: #0369a1; }
+    .badge-mid { background: var(--tier-mid-bg); color: #b45309; }
+    .badge-low { background: var(--tier-low-bg); color: #047857; }
+    .badge-warn { background: #ffe4e6; color: #be123c; }
+    .badge-thumb { background: #ede9e0; color: #3d3124; }
+
+    .hud-subnote { font-size: 12px; color: var(--text-muted); font-weight: 600; }
+
+    .hud-next-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 12px;
+      border-left: 1px solid var(--border);
+    }
+
+    .hud-next-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      height: 36px;
+      padding: 0 8px;
+      border-radius: 8px;
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1.5px dashed #38bdf8;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .hud-status-col {
+      text-align: right;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .kalimba-stage-wrap {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid #8a5631;
+      box-shadow: 0 8px 20px rgba(74, 41, 18, 0.16);
+      background: #1e1915;
+    }
+
+    .waterfall-wrap {
+      position: relative;
+      background: linear-gradient(180deg, #1b1713 0%, #26201a 100%);
+      border-bottom: 2px solid #c98c57;
+    }
+
+    .waterfall-wrap.hidden { display: none; }
+
+    #waterfallCanvas {
+      display: block;
+      width: 100%;
+      height: 185px;
+      cursor: pointer;
+    }
+
+    .waterfall-legend {
+      position: absolute;
+      top: 6px;
+      left: 10px;
+      right: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+      font-size: 11px;
+      color: rgba(255,255,255,0.78);
+    }
+
+    .legend-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: rgba(20, 16, 13, 0.65);
+      padding: 3px 8px;
+      border-radius: 999px;
+      backdrop-filter: blur(4px);
+    }
+
+    .legend-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 700;
+    }
+
+    .legend-dot i {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .kalimba-board {
+      position: relative;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          rgba(255,255,255,0.03) 0px,
+          rgba(255,255,255,0.03) 2px,
+          transparent 2px,
+          transparent 11px
+        ),
+        linear-gradient(180deg, var(--wood-top) 0%, var(--wood-mid) 52%, var(--wood-dark) 100%);
+      padding: 10px 8px 14px;
+      user-select: none;
+    }
+
+    .thumb-zone-bar {
+      display: grid;
+      grid-template-columns: 8fr 1fr 8fr;
+      gap: 4px;
+      margin-bottom: 6px;
+      font-size: 11px;
+      font-weight: 800;
+      color: rgba(255, 246, 234, 0.92);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.35);
+      text-align: center;
+    }
+
+    .thumb-zone-left, .thumb-zone-right { background: rgba(0,0,0,0.16); border-radius: 6px; padding: 2px 6px; }
+    .thumb-zone-center { background: rgba(254, 243, 199, 0.28); border-radius: 6px; padding: 2px 2px; color: #fef3c7; }
+
+    .tier-section { position: relative; margin-bottom: 6px; }
+    .tier-section:last-child { margin-bottom: 0; }
+
+    .tier-header-tag {
+      position: absolute;
+      left: 4px;
+      top: 2px;
+      z-index: 4;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 1px 6px;
+      border-radius: 4px;
+      pointer-events: none;
+      opacity: 0.92;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.22);
+    }
+
+    .tier-header-tag.top { background: #0284c7; color: #fff; }
+    .tier-header-tag.mid { background: #d97706; color: #fff; }
+    .tier-header-tag.low { background: #059669; color: #fff; }
+
+    .bridge-bar {
+      height: 5px;
+      border-radius: 3px;
+      margin: 0 2px 2px;
+      background: linear-gradient(180deg, #f3f4f6 0%, #9ca3af 50%, #4b5563 100%);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.35);
+    }
+
+    .tine-row {
+      display: grid;
+      grid-template-columns: repeat(17, minmax(0, 1fr));
+      gap: 3px;
+      align-items: start;
+      position: relative;
+    }
+
+    .tine-slot { display: flex; flex-direction: column; align-items: center; position: relative; }
+
+    .tine-slot.is-center::before {
+      content: "";
+      position: absolute;
+      inset: -2px -1.5px;
+      border-radius: 6px;
+      background: rgba(254, 243, 199, 0.14);
+      pointer-events: none;
+    }
+
+    .tine-empty-hole {
+      width: 10px;
+      height: 10px;
+      margin-top: 10px;
+      border-radius: 50%;
+      background: rgba(38, 19, 8, 0.35);
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.45);
+    }
+
+    .tine-btn {
+      width: 100%;
+      border: none;
+      border-radius: 3px 3px 10px 10px;
+      padding: 4px 1px 6px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 2px;
+      position: relative;
+      transition: transform 0.08s ease, box-shadow 0.12s ease, background 0.12s ease;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.34), inset 0 1px 0 rgba(255,255,255,0.75);
+      overflow: hidden;
+    }
+
+    .tine-btn.tier-top {
+      background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 48%, #64748b 100%);
+      color: #0f172a;
+      border: 1px solid #475569;
+    }
+    .tine-btn.tier-top.is-dup { opacity: 0.72; }
+
+    .tine-btn.tier-mid {
+      background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 55%, #cbd5e1 100%);
+      color: #1e293b;
+      border: 1px solid #94a3b8;
+    }
+    .tine-btn.tier-mid.is-landmark {
+      background: linear-gradient(180deg, #fffbeb 0%, #fde68a 55%, #f59e0b 100%);
+      border-color: #b45309;
+    }
+
+    .tine-btn.tier-low {
+      background: linear-gradient(180deg, #d1fae5 0%, #a7f3d0 55%, #6ee7b7 100%);
+      color: #064e3b;
+      border: 1px solid #059669;
+    }
+    .tine-btn.tier-low.is-sharp {
+      background: linear-gradient(180deg, #99f6e4 0%, #5eead4 55%, #14b8a6 100%);
+      border-color: #0f766e;
+    }
+
+    .tine-btn:hover { filter: brightness(1.07); transform: translateY(1px); }
+
+    .tine-badge {
+      background: rgba(255, 255, 255, 0.92);
+      color: #18181b;
+      border-radius: 5px;
+      padding: 1px 2px;
+      min-width: 82%;
+      text-align: center;
+      line-height: 1.1;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.18);
+      pointer-events: none;
+    }
+
+    .tine-primary {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+
+    .oct-dot {
+      display: block;
+      font-size: 7px;
+      line-height: 0.65;
+      letter-spacing: 0.5px;
+      color: inherit;
+    }
+
+    .tine-secondary {
+      display: block;
+      font-size: 9px;
+      font-weight: 700;
+      color: #52525b;
+      margin-top: 1px;
+      letter-spacing: -0.03em;
+    }
+
+    .tine-btn.is-active {
+      background: linear-gradient(180deg, #fb7185 0%, #e11d48 60%, #9f1239 100%) !important;
+      border-color: #fff1f2 !important;
+      color: #fff !important;
+      transform: translateY(3px) scale(1.04);
+      z-index: 6;
+      box-shadow: 0 0 0 2.5px #fff, 0 0 18px 4px var(--active-hit-glow) !important;
+      animation: tinePluck 0.24s ease-out;
+    }
+    .tine-btn.is-active .tine-badge { background: #fff; color: #be123c; }
+    .tine-btn.is-active .tine-secondary { color: #881337; }
+
+    .tine-btn.is-next {
+      box-shadow: 0 0 0 2.5px #38bdf8, 0 0 12px 2px rgba(56, 189, 248, 0.65) !important;
+      z-index: 5;
+    }
+    .tine-btn.is-next::after {
+      content: "次";
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      font-size: 9px;
+      font-weight: 900;
+      background: #0284c7;
+      color: #fff;
+      padding: 0 3px;
+      border-radius: 3px;
+      line-height: 1.3;
+    }
+
+    .tine-btn.is-tuned {
+      box-shadow: 0 0 0 2.5px #34d399, 0 0 14px 3px rgba(52, 211, 153, 0.7) !important;
+      z-index: 5;
+    }
+
+    .tine-btn.is-plucked { transform: translateY(3px); filter: brightness(1.18); }
+
+    @keyframes tinePluck {
+      0% { transform: translateY(5px) scale(1.06); }
+      40% { transform: translateY(1px) scale(1.03); }
+      70% { transform: translateY(3px) scale(1.04); }
+      100% { transform: translateY(3px) scale(1.04); }
+    }
+
+    .transport-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+    }
+
+    .transport-left, .transport-right {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .speed-presets { display: inline-flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+
+    .preset-chip {
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 5px 8px;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .preset-chip.active { background: #2a2118; color: #fff; border-color: #2a2118; }
+
+    .bpm-pill {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--tier-mid);
+      background: var(--tier-mid-bg);
+      padding: 4px 8px;
+      border-radius: 7px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .ribbon-wrap {
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 8px 10px;
+    }
+
+    .ribbon-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    #scoreRibbon {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 5px;
+      padding: 4px 2px 6px;
+      scroll-behavior: smooth;
+    }
+
+    .note-chip {
+      flex: 0 0 auto;
+      padding: 4px 8px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      transition: all 0.12s ease;
+      font-variant-numeric: tabular-nums;
+    }
+    .note-chip:hover { background: var(--bg-subtle); }
+    .note-chip.tier-top { border-bottom: 3px solid var(--tier-top); }
+    .note-chip.tier-mid { border-bottom: 3px solid var(--tier-mid); }
+    .note-chip.tier-low { border-bottom: 3px solid var(--tier-low); }
+    .note-chip.out-range { border-bottom: 3px solid #e11d48; opacity: 0.65; }
+    .note-chip.in-loop { background: #ecfdf5; border-color: #6ee7b7; }
+    .note-chip.current {
+      background: #e11d48 !important;
+      color: #fff !important;
+      border-color: #be123c !important;
+      transform: scale(1.06);
+      box-shadow: 0 2px 8px rgba(225, 29, 72, 0.35);
+    }
+
+    .settings-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 14px 16px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .field-row { display: flex; gap: 8px; align-items: center; }
+
+    select, input[type="number"] {
+      width: 100%;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 9px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface-soft);
+      color: var(--text);
+    }
+
+    input[type="range"] { width: 100%; accent-color: #b45309; cursor: pointer; }
+
+    .drop-zone {
+      border: 2px dashed #b45309;
+      background: #fdf8f0;
+      border-radius: 12px;
+      padding: 14px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .drop-zone:hover, .drop-zone.dragover { background: #fef3c7; border-color: #92400e; }
+    .drop-zone-main { font-size: 13px; font-weight: 800; color: #92400e; }
+    .drop-zone-sub { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+    .demo-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 6px 10px;
+      background: var(--surface-soft);
+      border-radius: 9px;
+      border: 1px solid var(--border);
+    }
+
+    .toggle-row input[type="checkbox"] { width: 17px; height: 17px; accent-color: #1f7a53; cursor: pointer; }
+
+    .range-summary {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 7px 10px;
+      border-radius: 9px;
+      background: var(--surface-soft);
+      border: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .range-summary.good { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+    .range-summary.warn { background: #fffbeb; border-color: #fde68a; color: #92400e; }
+
+    .status-footer { text-align: center; font-size: 12px; font-weight: 700; color: var(--text-muted); padding: 4px; }
+
+    /* App 3-Mode Switcher */
+    .mode-nav {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      background: var(--bg-subtle);
+      padding: 5px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border);
+    }
+
+    .mode-tab {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 800;
+      padding: 9px 10px;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .mode-tab:hover { color: var(--text); background: rgba(255,255,255,0.45); }
+    .mode-tab.active {
+      background: var(--surface);
+      color: var(--text);
+      border-color: var(--border-strong);
+      box-shadow: 0 2px 8px rgba(42, 33, 24, 0.08);
+    }
+    .mode-tab.active[data-appmode="demo"] { color: #b45309; border-color: #f59e0b; background: #fffbeb; }
+    .mode-tab.active[data-appmode="tune"] { color: #0369a1; border-color: #38bdf8; background: #f0f9ff; }
+
+    /* Demo Studio Panel */
+    .demo-studio {
+      display: none;
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border: 1px solid #f59e0b;
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      gap: 10px;
+      flex-direction: column;
+    }
+    .demo-studio.open { display: flex; }
+
+    .demo-studio-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .demo-studio-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #92400e;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .demo-controls select {
+      width: auto;
+      padding: 6px 10px;
+      font-size: 12px;
+      background: #fff;
+      border-color: #d97706;
+    }
+
+    /* Dedicated 41-Key Tuning Studio Panel */
+    .tune-studio {
+      display: none;
+      background: #1f1b17;
+      color: #faf6f0;
+      border: 1px solid #3f352b;
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      gap: 12px;
+      flex-direction: column;
+      box-shadow: var(--shadow-md);
+    }
+    .tune-studio.open { display: flex; }
+
+    .tune-top-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .tune-target-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tune-target-badge {
+      min-width: 64px;
+      height: 52px;
+      padding: 0 10px;
+      border-radius: 12px;
+      background: #fef3c7;
+      color: #92400e;
+      border: 2px solid #f59e0b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1.05;
+    }
+    .tune-target-badge.tier-top { background: #e0f2fe; color: #0369a1; border-color: #38bdf8; }
+    .tune-target-badge.tier-low { background: #d1fae5; color: #047857; border-color: #34d399; }
+
+    .tune-target-meta { display: flex; flex-direction: column; gap: 2px; }
+    .tune-target-name { font-size: 16px; font-weight: 800; color: #fff; }
+    .tune-target-freq { font-size: 12px; color: #d6cbbd; font-variant-numeric: tabular-nums; }
+
+    .tune-meter-box {
+      background: #2c2620;
+      border-radius: 10px;
+      padding: 12px 14px;
+      border: 1px solid #443a30;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .tune-dashboard {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .tune-compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr 1fr;
+      gap: 8px;
+    }
+
+    .tune-readout-card {
+      background: #221d18;
+      border: 1px solid #3f352b;
+      border-radius: 9px;
+      padding: 8px 9px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 2px;
+      text-align: center;
+    }
+    .tune-readout-card.is-diff {
+      background: #25201a;
+      border-color: #54493d;
+    }
+    .tune-readout-card.is-diff.ok { border-color: rgba(52, 211, 153, 0.65); background: rgba(16, 185, 129, 0.12); }
+    .tune-readout-card.is-diff.high { border-color: rgba(251, 146, 60, 0.65); background: rgba(249, 115, 22, 0.12); }
+    .tune-readout-card.is-diff.low { border-color: rgba(56, 189, 248, 0.65); background: rgba(14, 165, 233, 0.12); }
+
+    .tune-card-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #a89c8e;
+      letter-spacing: 0.03em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .tune-live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #6b7280;
+      display: inline-block;
+    }
+    .tune-live-dot.live { background: #34d399; box-shadow: 0 0 6px #34d399; }
+    .tune-live-dot.hold { background: #fbbf24; }
+    .tune-live-dot.sim { background: #a78bfa; }
+
+    .tune-card-main {
+      font-size: 20px;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.15;
+      font-variant-numeric: tabular-nums;
+    }
+    .tune-card-main.ok { color: #34d399; }
+    .tune-card-main.high { color: #fb923c; }
+    .tune-card-main.low { color: #38bdf8; }
+
+    .tune-card-sub {
+      font-size: 11px;
+      font-weight: 700;
+      color: #d6cbbd;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tune-guidance {
+      font-size: 13.5px;
+      font-weight: 800;
+      text-align: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: #221d18;
+      border: 1px solid #443a30;
+      color: #fde68a;
+      line-height: 1.45;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tune-guidance.ok { color: #6ee7b7; border-color: rgba(52, 211, 153, 0.5); background: rgba(16, 185, 129, 0.14); }
+    .tune-guidance.high { color: #fdba74; border-color: rgba(251, 146, 60, 0.55); background: rgba(249, 115, 22, 0.14); }
+    .tune-guidance.low { color: #7dd3fc; border-color: rgba(56, 189, 248, 0.55); background: rgba(14, 165, 233, 0.14); }
+
+    .tune-meter-wrap { display: flex; flex-direction: column; gap: 4px; }
+
+    .tune-meter-track {
+      position: relative;
+      height: 20px;
+      background: #3d342b;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid #52463a;
+    }
+
+    .tune-meter-sweet {
+      position: absolute;
+      left: 44%;
+      width: 12%;
+      top: 0;
+      bottom: 0;
+      background: rgba(52, 211, 153, 0.28);
+      border-left: 1px solid rgba(52, 211, 153, 0.65);
+      border-right: 1px solid rgba(52, 211, 153, 0.65);
+    }
+
+    .tune-meter-center-line {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: rgba(255, 255, 255, 0.45);
+      transform: translateX(-1px);
+    }
+
+    .tune-meter-fill {
+      position: absolute;
+      top: 2px;
+      bottom: 2px;
+      left: 50%;
+      width: 0;
+      border-radius: 999px;
+      background: #9ca3af;
+      transition: left 0.07s linear, width 0.07s linear, background 0.12s ease;
+    }
+
+    .tune-meter-needle {
+      position: absolute;
+      top: 1px;
+      bottom: 1px;
+      left: 50%;
+      width: 8px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.45);
+      transform: translateX(-4px);
+      transition: left 0.07s linear, background 0.12s ease;
+      z-index: 2;
+    }
+
+    .tune-meter-scale {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      color: #a89c8e;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Visual Kalimba Tine + Hammer Diagram Card */
+    .tune-diagram-card {
+      background: #2c2620;
+      border: 1px solid #443a30;
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .tune-diagram-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: #f3ece2;
+    }
+
+    .tune-diagram-badge {
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #3d342b;
+      color: #d6cbbd;
+      border: 1px solid #54493d;
+    }
+    .tune-diagram-badge.high { background: rgba(249, 115, 22, 0.2); color: #fdba74; border-color: rgba(251, 146, 60, 0.55); }
+    .tune-diagram-badge.low { background: rgba(14, 165, 233, 0.2); color: #7dd3fc; border-color: rgba(56, 189, 248, 0.55); }
+    .tune-diagram-badge.ok { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border-color: rgba(52, 211, 153, 0.55); }
+
+    .tune-diagram-svg {
+      width: 100%;
+      max-height: 205px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .tune-svg-overlay { display: none; }
+    .tune-svg-overlay.active { display: inline; }
+
+    #tuneSvgTineGroup { transition: transform 0.22s ease; }
+
+    @keyframes hammerTapDown {
+      0%, 100% { transform: translate(0, -6px) rotate(-14deg); }
+      45% { transform: translate(0, 1px) rotate(3deg); }
+      65% { transform: translate(0, -2px) rotate(-5deg); }
+    }
+    @keyframes hammerTapUp {
+      0%, 100% { transform: translate(0, 6px) rotate(14deg); }
+      45% { transform: translate(0, -1px) rotate(-3deg); }
+      65% { transform: translate(0, 2px) rotate(5deg); }
+    }
+    @keyframes arrowPulseDown {
+      0%, 100% { transform: translateY(-3px); opacity: 0.55; }
+      50% { transform: translateY(4px); opacity: 1; }
+    }
+    @keyframes arrowPulseUp {
+      0%, 100% { transform: translateY(3px); opacity: 0.55; }
+      50% { transform: translateY(-4px); opacity: 1; }
+    }
+
+    .anim-hammer-down { transform-box: fill-box; transform-origin: right center; animation: hammerTapDown 0.85s ease-in-out infinite; }
+    .anim-hammer-up { transform-box: fill-box; transform-origin: right center; animation: hammerTapUp 0.85s ease-in-out infinite; }
+    .anim-arrow-down { animation: arrowPulseDown 0.85s ease-in-out infinite; }
+    .anim-arrow-up { animation: arrowPulseUp 0.85s ease-in-out infinite; }
+
+    .tune-sim-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 4px;
+      padding-top: 4px;
+      border-top: 1px dashed #443a30;
+    }
+    .tune-sim-label { font-size: 10px; font-weight: 700; color: #a89c8e; }
+    .tune-sim-btns { display: flex; flex-wrap: wrap; gap: 4px; }
+    .tune-sim-btn {
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 3px 7px;
+      border-radius: 6px;
+      border: 1px solid #54493d;
+      background: #221d18;
+      color: #e5ddd1;
+      cursor: pointer;
+    }
+    .tune-sim-btn:hover { background: #3b332b; }
+    .tune-sim-btn.active { border-color: #a78bfa; background: rgba(139, 92, 246, 0.24); color: #ede9fe; }
+
+    .tune-howto-strip {
+      background: #26211b;
+      border: 1px solid #3f352b;
+      border-radius: 9px;
+      padding: 8px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11.5px;
+      color: #d6cbbd;
+    }
+    .tune-howto-steps { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .tune-howto-step { display: inline-flex; align-items: center; gap: 5px; font-weight: 700; }
+    .tune-howto-num {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #443a30;
+      color: #fde68a;
+      font-size: 10.5px;
+      font-weight: 900;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .tune-howto-tip { font-size: 11px; color: #fbbf24; font-weight: 700; }
+
+    .tune-nav-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .tune-progress-pill {
+      font-size: 12px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(52, 211, 153, 0.18);
+      color: #6ee7b7;
+      border: 1px solid rgba(52, 211, 153, 0.35);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tune-dark-btn {
+      background: #332c25;
+      border-color: #54493d;
+      color: #faf6f0;
+    }
+    .tune-dark-btn:hover:not(:disabled) { background: #433a31; }
+
+    /* Tine Tuning Target & Done Visuals */
+    .tine-btn.is-tune-target {
+      box-shadow: 0 0 0 3px #fff, 0 0 18px 4px rgba(56, 189, 248, 0.85) !important;
+      transform: translateY(2px) scale(1.05);
+      z-index: 7;
+    }
+    .tine-btn.is-tune-done::before {
+      content: "✓";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      font-size: 10px;
+      font-weight: 900;
+      background: #059669;
+      color: #fff;
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.35);
+      z-index: 2;
+    }
+
+    .hidden-section { display: none !important; }
+
+    @media (max-width: 760px) {
+      body { padding: 8px; }
+      .settings-grid { grid-template-columns: 1fr; }
+      .hud-strip { grid-template-columns: 1fr; }
+      .tune-dashboard { grid-template-columns: 1fr; }
+      .hud-next-box { border-left: none; border-top: 1px solid var(--border); padding-left: 0; padding-top: 8px; }
+      .hud-status-col { text-align: left; }
+      .tine-row { gap: 2px; }
+      .tine-primary { font-size: 9.5px; }
+      .tine-secondary { font-size: 7.5px; }
+      #waterfallCanvas { height: 150px; }
+      .mode-tab { font-size: 12px; padding: 7px 6px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon">41K</div>
+      <div>
+        <h1>41音カリンバ・練習ステーション</h1>
+        <div class="brand-sub">Seeds 41キー（3段式：上17・中17・下7）対応 ／ 楽譜いらずの直感ガイド</div>
+      </div>
+    </div>
+
+    <div class="topbar-actions">
+      <div class="seg-group" id="notationSeg" title="キー刻印・ガイド表記を切り替え">
+        <button class="seg-btn active" data-mode="both">数字+音名</button>
+        <button class="seg-btn" data-mode="num">数字譜</button>
+        <button class="seg-btn" data-mode="note">英音名</button>
+        <button class="seg-btn" data-mode="kana">ドレミ</button>
+      </div>
+      <button class="btn btn-sm" id="waterfallToggleBtn">⬇ ノーツ落下: ON</button>
+      <button class="btn btn-accent btn-sm" id="tunerBtn">🎤 チューナー / 調律</button>
+    </div>
+  </header>
+
+  <section class="tuner-bar" id="tunerBar">
+    <div class="tuner-top">
+      <div class="tuner-readout">
+        <span class="tuner-note-big" id="tunerNote">--</span>
+        <span class="tuner-kalimba-tag" id="tunerKalimbaPos">実機のキーを弾いてください</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <span class="tuner-cents" id="tunerCents">±0 cent</span>
+        <button class="btn btn-sm" id="tunerStopBtn" style="background:#3d332a; color:#fff; border-color:#57493c;">停止</button>
+      </div>
+    </div>
+    <div class="tuner-meter">
+      <div class="tuner-meter-center"></div>
+      <div class="tuner-pointer" id="tunerPointer"></div>
+    </div>
+  </section>
+
+  <main class="stage-card">
+    <!-- 3-Mode Top Switcher -->
+    <nav class="mode-nav" id="appModeNav" aria-label="アプリモード切替">
+      <button type="button" class="mode-tab active" data-appmode="practice">🎵 練習モード</button>
+      <button type="button" class="mode-tab" data-appmode="demo">✨ カリンバ実演デモ</button>
+      <button type="button" class="mode-tab" data-appmode="tune">🔧 41本チューニング</button>
+    </nav>
+
+    <!-- Demo Studio Panel (Visible in Demo Mode) -->
+    <section class="demo-studio" id="demoStudio">
+      <div class="demo-studio-row">
+        <div class="demo-studio-title">
+          <span>✨ カリンバ実演デモ</span>
+          <span style="font-size:12px; font-weight:600; color:#78350f;">実際のカリンバ音色で曲の仕上がりを確認できます</span>
+        </div>
+        <div class="demo-controls">
+          <button type="button" class="btn btn-amber" id="demoPlayBtn">▶ 実演デモを再生</button>
+          <button type="button" class="btn btn-sm" id="sweep41Btn">🎶 41音ぜんぶ聴く</button>
+        </div>
+      </div>
+      <div class="demo-studio-row">
+        <div class="demo-controls">
+          <label for="timbreSelect" style="font-size:12px; font-weight:800; color:#78350f;">音色:</label>
+          <select id="timbreSelect">
+            <option value="okoume" selected>🪵 Seeds オクメ（標準・やさしい余韻）</option>
+            <option value="musicbox">✨ オルゴール風（キラキラ高倍音）</option>
+            <option value="walnut">🌙 ウォルナット（落ち着いた丸い音）</option>
+          </select>
+          <div class="seg-group" id="demoStyleSeg">
+            <button type="button" class="seg-btn active" data-dstyle="solo">カリンバ単体（ソロ）</button>
+            <button type="button" class="seg-btn" data-dstyle="band">伴奏BGMあり</button>
+          </div>
+        </div>
+        <span style="font-size:11px; font-weight:700; color:#92400e;">※ 曲は下の「曲・MIDIファイル選択」から自由に切り替えられます</span>
+      </div>
+    </section>
+
+    <!-- Dedicated 41-Key Tuning Studio Panel (Visible in Tune Mode) -->
+    <section class="tune-studio" id="tuneStudio">
+      <div class="tune-top-row">
+        <div class="tune-target-group">
+          <div class="tune-target-badge" id="tuneTargetBadge">1</div>
+          <div class="tune-target-meta">
+            <div class="tune-target-name" id="tuneTargetName">中段・基本：C4（ド）</div>
+            <div class="tune-target-freq" id="tuneTargetFreq">目標ピッチ: 261.6 Hz（A=440Hz基準） ／ 下の41キーをタップでも選べます</div>
+          </div>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
+          <button type="button" class="btn btn-amber btn-sm" id="tuneRefToneBtn">🔊 お手本音を鳴らす</button>
+          <button type="button" class="btn btn-accent btn-sm" id="tuneMicBtn">🎤 マイクを起動</button>
+        </div>
+      </div>
+
+      <div class="tune-dashboard">
+        <!-- Left: Pitch Comparison & Cent Meter -->
+        <div class="tune-meter-box">
+          <div class="tune-compare-grid">
+            <div class="tune-readout-card">
+              <div class="tune-card-label">🎯 目標の音</div>
+              <div class="tune-card-main" id="tuneCmpTargetNote">C4</div>
+              <div class="tune-card-sub" id="tuneCmpTargetHz">261.6 Hz</div>
+            </div>
+            <div class="tune-readout-card is-diff" id="tuneCmpDiffCard">
+              <div class="tune-card-label">目標とのズレ</div>
+              <div class="tune-card-main" id="tuneCmpDiffMain">--</div>
+              <div class="tune-card-sub" id="tuneCmpDiffSub">マイク待機中</div>
+            </div>
+            <div class="tune-readout-card">
+              <div class="tune-card-label">
+                <span class="tune-live-dot" id="tuneLiveDot"></span>
+                <span id="tuneLiveStatusText">いま鳴った音</span>
+              </div>
+              <div class="tune-card-main" id="tuneCmpNowNote">--</div>
+              <div class="tune-card-sub" id="tuneCmpNowHz">-- Hz</div>
+            </div>
+          </div>
+
+          <div class="tune-meter-wrap">
+            <div class="tune-meter-track">
+              <div class="tune-meter-sweet"></div>
+              <div class="tune-meter-center-line"></div>
+              <div class="tune-meter-fill" id="tuneMeterFill"></div>
+              <div class="tune-meter-needle" id="tuneNeedle"></div>
+            </div>
+            <div class="tune-meter-scale">
+              <span>-100c (低い)</span>
+              <span>-50c</span>
+              <span style="color:#6ee7b7; font-weight:800;">0 (ぴったり ±6c)</span>
+              <span>+50c</span>
+              <span>+100c (高い)</span>
+            </div>
+          </div>
+
+          <div class="tune-guidance" id="tuneGuidance">「🎤 マイクを起動」を押して、光っているキーを実機で1回ポンと弾いてください</div>
+        </div>
+
+        <!-- Right: Animated Kalimba Tine & Hammer Direction Diagram -->
+        <div class="tune-diagram-card">
+          <div class="tune-diagram-head">
+            <span>🔨 鍵盤の動かし方（図解）</span>
+            <span class="tune-diagram-badge" id="tuneDiagramBadge">待機中</span>
+          </div>
+
+          <svg class="tune-diagram-svg" viewBox="0 0 330 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="カリンバ鍵盤と調律ハンマーの動かす方向図解">
+            <defs>
+              <linearGradient id="woodGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#7c5536"/>
+                <stop offset="100%" stop-color="#4e331f"/>
+              </linearGradient>
+              <linearGradient id="tineGrad" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#cbd5e1"/>
+                <stop offset="45%" stop-color="#f8fafc"/>
+                <stop offset="100%" stop-color="#94a3b8"/>
+              </linearGradient>
+              <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#e2e8f0"/>
+                <stop offset="50%" stop-color="#94a3b8"/>
+                <stop offset="100%" stop-color="#64748b"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Orientation Labels -->
+            <text x="102" y="15" text-anchor="middle" fill="#d6cbbd" font-size="10.5" font-weight="800">▲ 本体の上側（根元）</text>
+            <text x="102" y="214" text-anchor="middle" fill="#d6cbbd" font-size="10.5" font-weight="800">▼ 親指で弾く側（先端）</text>
+
+            <!-- Kalimba Wooden Body -->
+            <rect x="24" y="22" width="156" height="176" rx="14" fill="url(#woodGrad)" stroke="#9a6b47" stroke-width="1.5"/>
+            <circle cx="102" cy="146" r="24" fill="#2b1b11" opacity="0.55"/>
+
+            <!-- Neighbor Ghost Tines for Real Kalimba Context -->
+            <rect x="48" y="54" width="14" height="106" rx="5" fill="#94a3b8" opacity="0.28"/>
+            <rect x="69" y="52" width="14" height="114" rx="5" fill="#94a3b8" opacity="0.34"/>
+            <rect x="121" y="52" width="14" height="114" rx="5" fill="#94a3b8" opacity="0.34"/>
+            <rect x="142" y="54" width="14" height="106" rx="5" fill="#94a3b8" opacity="0.28"/>
+
+            <!-- Target Active Tine (moves subtly up/down depending on tuning direction) -->
+            <g id="tuneSvgTineGroup">
+              <rect id="tuneSvgTineBody" x="91" y="48" width="22" height="124" rx="7" fill="url(#tineGrad)" stroke="#fef3c7" stroke-width="2"/>
+              <text id="tuneSvgTineLabel" x="102" y="150" text-anchor="middle" fill="#1f1b17" font-size="12" font-weight="900">1</text>
+            </g>
+
+            <!-- Metal Presser Bar (Bridge / Fulcrum) on top of tines -->
+            <rect x="30" y="72" width="144" height="12" rx="4" fill="url(#barGrad)" stroke="#475569" stroke-width="1"/>
+            <circle cx="38" cy="78" r="2.2" fill="#334155"/>
+            <circle cx="166" cy="78" r="2.2" fill="#334155"/>
+            <text x="44" y="81.5" fill="#1e293b" font-size="8.5" font-weight="900">押さえ棒</text>
+
+            <!-- ===== OVERLAY 1: IDLE (Shows both reference rules clearly) ===== -->
+            <g id="tuneSvgIdleOverlay" class="tune-svg-overlay active">
+              <!-- Pointer to Top End -->
+              <line x1="115" y1="50" x2="188" y2="54" stroke="#fb923c" stroke-width="1.8" stroke-dasharray="3 2"/>
+              <circle cx="115" cy="50" r="3.5" fill="#fb923c"/>
+              <rect x="190" y="28" width="134" height="68" rx="9" fill="#221d18" stroke="#fb923c" stroke-width="1.5"/>
+              <text x="257" y="46" text-anchor="middle" fill="#fdba74" font-size="11.5" font-weight="900">音が高い (+c) とき</text>
+              <text x="257" y="64" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">⬇ 上端を下へ叩く</text>
+              <text x="257" y="82" text-anchor="middle" fill="#d6cbbd" font-size="9.5" font-weight="700">キーを長く → 音が低く</text>
+
+              <!-- Pointer to Bottom Tip -->
+              <line x1="115" y1="170" x2="188" y2="156" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="3 2"/>
+              <circle cx="115" cy="170" r="3.5" fill="#38bdf8"/>
+              <rect x="190" y="122" width="134" height="68" rx="9" fill="#221d18" stroke="#38bdf8" stroke-width="1.5"/>
+              <text x="257" y="140" text-anchor="middle" fill="#7dd3fc" font-size="11.5" font-weight="900">音が低い (-c) とき</text>
+              <text x="257" y="158" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">⬆ 先端を上へ叩く</text>
+              <text x="257" y="176" text-anchor="middle" fill="#d6cbbd" font-size="9.5" font-weight="700">キーを短く → 音が高く</text>
+            </g>
+
+            <!-- ===== OVERLAY 2: TOO HIGH (+cent -> Tap TOP END DOWNWARD) ===== -->
+            <g id="tuneSvgHighOverlay" class="tune-svg-overlay">
+              <!-- Animated Hammer tapping the TOP END downward -->
+              <g class="anim-hammer-down">
+                <rect x="115" y="29" width="54" height="6.5" rx="3" fill="#d97706" stroke="#fef3c7" stroke-width="0.8"/>
+                <rect x="94" y="22" width="24" height="19" rx="4" fill="#fb923c" stroke="#fff7ed" stroke-width="1.4"/>
+                <text x="106" y="35" text-anchor="middle" fill="#431407" font-size="9" font-weight="900">叩く</text>
+              </g>
+              <!-- Impact highlight at top end -->
+              <circle cx="102" cy="49" r="5" fill="#fb923c" opacity="0.85"/>
+              <!-- Animated Downward Arrows showing tine movement -->
+              <g class="anim-arrow-down" fill="#fb923c">
+                <path d="M77 96 L83 96 L83 128 L88 128 L80 142 L72 128 L77 128 Z"/>
+                <path d="M121 96 L127 96 L127 128 L132 128 L124 142 L116 128 L121 128 Z"/>
+              </g>
+              <!-- Dashed longer tip indicator -->
+              <rect x="91" y="170" width="22" height="12" rx="4" fill="none" stroke="#fb923c" stroke-width="1.8" stroke-dasharray="3 2"/>
+
+              <!-- Right Instruction Card -->
+              <rect x="190" y="32" width="134" height="156" rx="10" fill="rgba(249,115,22,0.16)" stroke="#fb923c" stroke-width="1.8"/>
+              <rect x="200" y="42" width="114" height="26" rx="7" fill="#ea580c"/>
+              <text x="257" y="59" text-anchor="middle" fill="#fff" font-size="12.5" font-weight="900">⬇ 下へ動かす</text>
+              <text x="257" y="88" text-anchor="middle" fill="#fdba74" font-size="11" font-weight="900">叩く場所：上端（根元）</text>
+              <text x="257" y="109" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">上から下へ軽くコンコン</text>
+              <line x1="204" y1="124" x2="310" y2="124" stroke="#fb923c" stroke-opacity="0.45"/>
+              <text x="257" y="144" text-anchor="middle" fill="#fed7aa" font-size="10.5" font-weight="700">キーが下に伸びて</text>
+              <text x="257" y="161" text-anchor="middle" fill="#fed7aa" font-size="10.5" font-weight="700">長くなる → 音が低くなる</text>
+              <text id="tuneSvgHighStrength" x="257" y="179" text-anchor="middle" fill="#fde68a" font-size="10" font-weight="900">目安：軽く2〜3回</text>
+            </g>
+
+            <!-- ===== OVERLAY 3: TOO LOW (-cent -> Tap BOTTOM TIP UPWARD) ===== -->
+            <g id="tuneSvgLowOverlay" class="tune-svg-overlay">
+              <!-- Animated Hammer tapping the BOTTOM TIP upward -->
+              <g class="anim-hammer-up">
+                <rect x="115" y="182" width="54" height="6.5" rx="3" fill="#0284c7" stroke="#e0f2fe" stroke-width="0.8"/>
+                <rect x="94" y="175" width="24" height="19" rx="4" fill="#38bdf8" stroke="#f0f9ff" stroke-width="1.4"/>
+                <text x="106" y="188" text-anchor="middle" fill="#082f49" font-size="9" font-weight="900">叩く</text>
+              </g>
+              <!-- Impact highlight at bottom tip -->
+              <circle cx="102" cy="171" r="5" fill="#38bdf8" opacity="0.85"/>
+              <!-- Animated Upward Arrows showing tine movement -->
+              <g class="anim-arrow-up" fill="#38bdf8">
+                <path d="M80 94 L88 108 L83 108 L83 140 L77 140 L77 108 L72 108 Z"/>
+                <path d="M124 94 L132 108 L127 108 L127 140 L121 140 L121 108 L116 108 Z"/>
+              </g>
+              <!-- Dashed shorter tip indicator -->
+              <rect x="91" y="158" width="22" height="12" rx="4" fill="none" stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="3 2"/>
+
+              <!-- Right Instruction Card -->
+              <rect x="190" y="32" width="134" height="156" rx="10" fill="rgba(14,165,233,0.16)" stroke="#38bdf8" stroke-width="1.8"/>
+              <rect x="200" y="42" width="114" height="26" rx="7" fill="#0284c7"/>
+              <text x="257" y="59" text-anchor="middle" fill="#fff" font-size="12.5" font-weight="900">⬆ 上へ動かす</text>
+              <text x="257" y="88" text-anchor="middle" fill="#7dd3fc" font-size="11" font-weight="900">叩く場所：先端（下側）</text>
+              <text x="257" y="109" text-anchor="middle" fill="#fff" font-size="11" font-weight="800">下から上へ軽くコンコン</text>
+              <line x1="204" y1="124" x2="310" y2="124" stroke="#38bdf8" stroke-opacity="0.45"/>
+              <text x="257" y="144" text-anchor="middle" fill="#bae6fd" font-size="10.5" font-weight="700">キーが上に引っ込んで</text>
+              <text x="257" y="161" text-anchor="middle" fill="#bae6fd" font-size="10.5" font-weight="700">短くなる → 音が高くなる</text>
+              <text id="tuneSvgLowStrength" x="257" y="179" text-anchor="middle" fill="#fde68a" font-size="10" font-weight="900">目安：軽く2〜3回</text>
+            </g>
+
+            <!-- ===== OVERLAY 4: IN TUNE (OK) ===== -->
+            <g id="tuneSvgOkOverlay" class="tune-svg-overlay">
+              <circle cx="102" cy="116" r="22" fill="#059669" stroke="#a7f3d0" stroke-width="2.5"/>
+              <text x="102" y="123" text-anchor="middle" fill="#fff" font-size="22" font-weight="900">✓</text>
+              <rect x="190" y="42" width="134" height="136" rx="10" fill="rgba(16,185,129,0.16)" stroke="#34d399" stroke-width="1.8"/>
+              <rect x="200" y="54" width="114" height="26" rx="7" fill="#059669"/>
+              <text x="257" y="71" text-anchor="middle" fill="#fff" font-size="12.5" font-weight="900">✅ ぴったり！</text>
+              <text x="257" y="104" text-anchor="middle" fill="#a7f3d0" font-size="11.5" font-weight="900">ハンマー不要です</text>
+              <text x="257" y="126" text-anchor="middle" fill="#fff" font-size="10.5" font-weight="700">そのまま次のキーへ</text>
+              <text x="257" y="144" text-anchor="middle" fill="#fff" font-size="10.5" font-weight="700">進めます！</text>
+            </g>
+          </svg>
+
+          <div class="tune-sim-row">
+            <span class="tune-sim-label">動きをお試し確認:</span>
+            <div class="tune-sim-btns" id="tuneSimBtns">
+              <button type="button" class="tune-sim-btn" data-tunesim="-35">低いとき (-35c)</button>
+              <button type="button" class="tune-sim-btn" data-tunesim="0">ぴったり (0c)</button>
+              <button type="button" class="tune-sim-btn" data-tunesim="35">高いとき (+35c)</button>
+              <button type="button" class="tune-sim-btn" data-tunesim="clear">解除</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Beginner 3-Step Quick Guide -->
+      <div class="tune-howto-strip">
+        <div class="tune-howto-steps">
+          <span class="tune-howto-step"><span class="tune-howto-num">1</span>光るキーを実機で1回ポンと弾く</span>
+          <span class="tune-howto-step"><span class="tune-howto-num">2</span>右図の矢印どおりハンマーで軽くコン</span>
+          <span class="tune-howto-step"><span class="tune-howto-num">3</span>もう一度弾いて緑の「ぴったり」で完了</span>
+        </div>
+        <span class="tune-howto-tip">💡 コツ：1回軽く叩く→弾いて確認を繰り返すと確実（1mm動くと約半音変わります）</span>
+      </div>
+
+      <div class="tune-nav-row">
+        <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
+          <button type="button" class="btn btn-sm tune-dark-btn" id="tunePrevBtn">◀ 前のキー</button>
+          <button type="button" class="btn btn-sm tune-dark-btn" id="tuneNextBtn">次のキー ▶</button>
+          <button type="button" class="btn btn-sm tune-dark-btn" data-tunejump="mid">中段17</button>
+          <button type="button" class="btn btn-sm tune-dark-btn" data-tunejump="low">下段7</button>
+          <button type="button" class="btn btn-sm tune-dark-btn" data-tunejump="top">上段17</button>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+          <label style="font-size:12px; display:flex; align-items:center; gap:5px; cursor:pointer; color:#e5ddd1;">
+            <input type="checkbox" id="tuneAutoNextCheck" checked style="accent-color:#10b981;" />
+            合ったら次へ
+          </label>
+          <button type="button" class="btn btn-primary btn-sm" id="tuneMarkDoneBtn">✓ 完了にする</button>
+          <span class="tune-progress-pill" id="tuneProgressPill">完了: 0 / 41 本</span>
+          <button type="button" class="btn btn-sm tune-dark-btn" id="tuneResetDoneBtn">リセット</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="hud-strip" id="hudStrip">
+      <div class="hud-now">
+        <div class="hud-note-pill tier-mid" id="hudNowPill">1</div>
+        <div class="hud-meta">
+          <div class="hud-label">いま弾くキー</div>
+          <div class="hud-badges" id="hudNowBadges">
+            <span class="badge badge-mid">中段・基本</span>
+            <span class="badge badge-thumb">中央 (右/左)</span>
+          </div>
+          <div class="hud-subnote" id="hudNowSub">C4 ／ ド（キーをタップで試奏できます）</div>
+        </div>
+      </div>
+
+      <div class="hud-next-box">
+        <div class="hud-next">
+          <div class="hud-next-pill" id="hudNextPill">--</div>
+          <div class="hud-meta">
+            <div class="hud-label">次のキー（予告）</div>
+            <div class="hud-subnote" id="hudNextSub">曲を選ぶと次の親指位置を予告します</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud-status-col">
+        <div id="hudProgress">0 / 0 音</div>
+        <div id="hudTime" style="margin-top:2px;">0:00 / 0:00</div>
+      </div>
+    </div>
+
+    <div class="kalimba-stage-wrap">
+      <div class="waterfall-wrap" id="waterfallWrap">
+        <div class="waterfall-legend">
+          <div class="legend-pills">
+            <span class="legend-dot"><i style="background:#38bdf8;"></i>上段 ▲ (♯半音)</span>
+            <span class="legend-dot"><i style="background:#f59e0b;"></i>中段 ● (基本17音)</span>
+            <span class="legend-dot"><i style="background:#10b981;"></i>下段 ▼ (低音 F3-B3)</span>
+          </div>
+          <div class="legend-pills">タップで任意位置へジャンプ</div>
+        </div>
+        <canvas id="waterfallCanvas" width="940" height="185"></canvas>
+      </div>
+
+      <div class="kalimba-board" id="kalimbaBoard">
+        <div class="thumb-zone-bar">
+          <div class="thumb-zone-left">👈 左親指エリア（8列）</div>
+          <div class="thumb-zone-center">中央</div>
+          <div class="thumb-zone-right">右親指エリア（8列） 👉</div>
+        </div>
+
+        <div class="tier-section">
+          <span class="tier-header-tag top">上段 17キー (♯)</span>
+          <div class="bridge-bar"></div>
+          <div class="tine-row" id="tierTopRow"></div>
+        </div>
+
+        <div class="tier-section">
+          <span class="tier-header-tag mid">中段 17キー (基本C)</span>
+          <div class="bridge-bar"></div>
+          <div class="tine-row" id="tierMidRow"></div>
+        </div>
+
+        <div class="tier-section">
+          <span class="tier-header-tag low">下段 7キー (低音)</span>
+          <div class="bridge-bar"></div>
+          <div class="tine-row" id="tierLowRow"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="transport-row" id="transportRow">
+      <div class="transport-left">
+        <button class="btn btn-primary" id="playBtn">▶ 再生</button>
+        <button class="btn" id="resetBtn">⏮ 最初</button>
+        <button class="btn btn-sm" id="prevNoteBtn" title="1音戻る">◀ 前</button>
+        <button class="btn btn-sm" id="nextNoteBtn" title="1音進む（待ち受け練習に便利）">次 ▶</button>
+        <div class="seg-group" id="practiceModeSeg">
+          <button class="seg-btn active" data-pmode="auto">🎵 リズム再生</button>
+          <button class="seg-btn" data-pmode="wait">🛑 待ち受け</button>
+        </div>
+      </div>
+
+      <div class="transport-right">
+        <div class="speed-presets" id="speedPresets">
+          <button class="preset-chip" data-speed="50">50%</button>
+          <button class="preset-chip" data-speed="60">60%</button>
+          <button class="preset-chip" data-speed="70">70%</button>
+          <button class="preset-chip" data-speed="80">80%</button>
+          <button class="preset-chip active" data-speed="100">100%</button>
+        </div>
+        <span class="bpm-pill" id="bpmReadout">100% · 100 BPM</span>
+      </div>
+    </div>
+
+    <div class="ribbon-wrap" id="ribbonWrap">
+      <div class="ribbon-header">
+        <span>🎼 音符リボン（タップでその音へジャンプ＆ループ起点に設定）</span>
+        <span id="filterStats" style="font-weight:700; color:#b45309;"></span>
+      </div>
+      <div id="scoreRibbon"></div>
+    </div>
+  </main>
+
+  <section class="settings-grid">
+    <div class="panel">
+      <h2 class="panel-title">
+        <span>📂 曲・MIDIファイル選択</span>
+        <span id="loadedSongTag" style="font-size:11px; font-weight:700; color:#b45309;">デモ曲読込済</span>
+      </h2>
+
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-zone-main" id="fileNameDisplay">📂 MIDIファイル (.mid) を選択 または ここにドロップ</div>
+        <div class="drop-zone-sub">「チェリー」などお好きな曲のMIDIを読み込めます（完全ローカル処理）</div>
+        <input type="file" id="fileInput" accept=".mid,.midi" style="display:none;" />
+      </div>
+
+      <div class="field">
+        <label>🎹 すぐ試せる内蔵練習曲</label>
+        <div class="demo-row" id="demoBtns">
+          <button class="btn btn-amber btn-sm" data-demo="carryon">🎸 Carry On My Wayward Son</button>
+          <button class="btn btn-sm" data-demo="twinkle">⭐ きらきら星（基本）</button>
+          <button class="btn btn-sm" data-demo="pop">🌸 ポップス風メロディ</button>
+          <button class="btn btn-sm" data-demo="canon">🌿 カノン風（低音活用）</button>
+          <button class="btn btn-sm" data-demo="chroma">✨ 半音・3段ステップ</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="trackSelect">
+          <span>🎸 練習トラック（主旋律を自動推定）</span>
+          <span id="trackCountHint"></span>
+        </label>
+        <div class="field-row">
+          <select id="trackSelect"></select>
+          <button class="btn btn-amber btn-sm" id="soloBtn">🔊 試聴</button>
+        </div>
+      </div>
+
+      <div class="range-summary good" id="rangeSummary">
+        <span id="rangeSummaryText">音域チェック: F3〜F6 内に 100% 収まっています</span>
+        <button class="btn btn-sm" id="autoFitBtn">✨ 自動音域フィット</button>
+      </div>
+
+      <div class="field-row">
+        <div class="field" style="flex:1;">
+          <label for="octaveShiftSelect">🎼 オクターブ移動</label>
+          <select id="octaveShiftSelect">
+            <option value="-2">-2 オクターブ</option>
+            <option value="-1">-1 オクターブ</option>
+            <option value="0" selected>変更なし (0)</option>
+            <option value="1">+1 オクターブ</option>
+            <option value="2">+2 オクターブ</option>
+          </select>
+        </div>
+        <div class="field" style="flex:1;">
+          <label for="transposeSelect">♯♭ キー移調（半音）</label>
+          <select id="transposeSelect">
+            <option value="-6">-6</option><option value="-5">-5</option><option value="-4">-4</option>
+            <option value="-3">-3</option><option value="-2">-2</option><option value="-1">-1</option>
+            <option value="0" selected>原キー (0)</option>
+            <option value="1">+1</option><option value="2">+2</option><option value="3">+3</option>
+            <option value="4">+4</option><option value="5">+5</option><option value="6">+6</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2 class="panel-title">
+        <span>👍 親指演奏サポート・音量・ループ</span>
+      </h2>
+
+      <div class="field">
+        <label for="thinningSelect">
+          <span>🪶 親指イージーフィルター（細かい音符の整理）</span>
+        </label>
+        <select id="thinningSelect">
+          <option value="mono" selected>単音化（同時発音は主旋律のみ表示・おすすめ）</option>
+          <option value="easy">親指イージー（単音化＋16分音符や装飾音を間引き）</option>
+          <option value="super">ゆったりメロディ（さらに細かい連打を整理）</option>
+          <option value="raw">原曲そのまま（間引きなし）</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="speedSlider">
+          <span>⏱ 再生スピード微調整（30%〜150%）</span>
+          <span id="speedSliderVal">100%</span>
+        </label>
+        <input type="range" id="speedSlider" min="30" max="150" step="5" value="100" />
+      </div>
+
+      <div class="toggle-row">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" id="loopCheck" />
+          <span>🔁 部分ループ練習</span>
+        </label>
+        <div style="display:flex; align-items:center; gap:5px; font-size:12px;">
+          <span>選択音から</span>
+          <input type="number" id="loopCountInput" value="8" min="2" max="64" style="width:58px; padding:4px 6px; text-align:center;" />
+          <span>音分</span>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field" style="flex:1;">
+          <label for="melodyVolSlider">
+            <span>🔔 メロディガイド音</span>
+            <span id="melodyVolVal">75%</span>
+          </label>
+          <input type="range" id="melodyVolSlider" min="0" max="100" step="5" value="75" />
+        </div>
+        <div class="field" style="flex:1;">
+          <label for="backingVolSlider">
+            <span>🎹 伴奏BGM音量</span>
+            <span id="backingVolVal">55%</span>
+          </label>
+          <input type="range" id="backingVolSlider" min="0" max="100" step="5" value="55" />
+        </div>
+      </div>
+
+      <div class="toggle-row">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+          <input type="checkbox" id="countdownCheck" checked />
+          <span>⏳ 再生前に3秒カウントダウン（楽器を構える時間）</span>
+        </label>
+      </div>
+    </div>
+  </section>
+
+  <div class="status-footer" id="statusBar">
+    ヒント: 画面のカリンバキーはどれでもタップして音を確認できます。スペースキーで再生/一時停止できます。
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  const KANA_NAMES = ['ド', '#ド', 'レ', '#レ', 'ミ', 'ファ', '#ファ', 'ソ', '#ソ', 'ラ', '#ラ', 'シ'];
+  const NUM_BASE   = ['1', '#1', '2', '#2', '3', '4', '#4', '5', '#5', '6', '#6', '7'];
+
+  function midiToNoteName(midi) {
+    const pc = ((midi % 12) + 12) % 12;
+    const oct = Math.floor(midi / 12) - 1;
+    return NOTE_NAMES[pc] + oct;
+  }
+
+  function midiToFreq(midi) {
+    return 440 * Math.pow(2, (midi - 69) / 12);
+  }
+
+  function midiToNumberNotation(midi) {
+    const pc = ((midi % 12) + 12) % 12;
+    const oct = Math.floor(midi / 12) - 1;
+    const base = NUM_BASE[pc];
+    if (oct <= 3) return base + '̣';
+    if (oct === 4) return base;
+    if (oct === 5) return base + '•';
+    if (oct === 6) return base + '••';
+    return base + (oct > 6 ? '•••' : '̣̣');
+  }
+
+  function midiToKana(midi) {
+    const pc = ((midi % 12) + 12) % 12;
+    const oct = Math.floor(midi / 12) - 1;
+    const base = KANA_NAMES[pc];
+    if (oct <= 3) return '低' + base;
+    if (oct === 4) return base;
+    if (oct === 5) return base + '↑';
+    return base + '↑↑';
+  }
+
+  function noteNameToMidi(name) {
+    const m = /^([A-Ga-g])([#b]?)(-?\d+)$/.exec(name.trim());
+    if (!m) return 60;
+    const baseMap = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
+    let pc = baseMap[m[1].toUpperCase()];
+    if (m[2] === '#') pc += 1;
+    if (m[2] === 'b') pc -= 1;
+    const oct = parseInt(m[3], 10);
+    return (oct + 1) * 12 + pc;
+  }
+
+  const MID_NOTES = ['D6','B5','G5','E5','C5','A4','F4','D4','C4','E4','G4','B4','D5','F5','A5','C6','E6'];
+  const TOP_NOTES = ['D#6','C6','G#5','F5','C#5','A#4','F#4','D#4','C#4','F4','G#4','C5','D#5','F#5','A#5','C#6','F6'];
+  const LOW_NOTES_BY_COL = { 5: 'B3', 6: 'A3', 7: 'G3', 8: 'F3', 9: 'F#3', 10: 'G#3', 11: 'A#3' };
+  const LANDMARK_COLS = new Set([2, 5, 8, 11, 14]);
+  const TOP_DUPLICATES = new Set(['F4', 'C5', 'F5', 'C6']);
+
+  const ALL_TINES = [];
+  const MIDI_TO_PRIMARY_TINE = new Map();
+  const MIDI_TO_ALL_TINES = new Map();
+
+  function registerTine(tier, col, noteName) {
+    const midi = noteNameToMidi(noteName);
+    const isDup = (tier === 'top' && TOP_DUPLICATES.has(noteName));
+    const thumb = col < 8 ? 'left' : (col > 8 ? 'right' : 'center');
+    const tine = {
+      id: `${tier}-${col}`,
+      tier, col, midi, noteName,
+      numLabel: midiToNumberNotation(midi),
+      kanaLabel: midiToKana(midi),
+      isDup,
+      isSharp: noteName.includes('#'),
+      thumb
+    };
+    ALL_TINES.push(tine);
+    if (!MIDI_TO_ALL_TINES.has(midi)) MIDI_TO_ALL_TINES.set(midi, []);
+    MIDI_TO_ALL_TINES.get(midi).push(tine);
+  }
+
+  MID_NOTES.forEach((n, col) => registerTine('mid', col, n));
+  Object.entries(LOW_NOTES_BY_COL).forEach(([col, n]) => registerTine('low', parseInt(col, 10), n));
+  TOP_NOTES.forEach((n, col) => registerTine('top', col, n));
+
+  ALL_TINES.forEach(t => {
+    if (!MIDI_TO_PRIMARY_TINE.has(t.midi)) MIDI_TO_PRIMARY_TINE.set(t.midi, t);
+  });
+
+  const MIN_KALIMBA_MIDI = 53;
+  const MAX_KALIMBA_MIDI = 89;
+
+  function getTineForMidi(midi) { return MIDI_TO_PRIMARY_TINE.get(midi) || null; }
+  function getThumbLabel(thumb) {
+    if (thumb === 'left') return '👈 左親指';
+    if (thumb === 'right') return '👉 右親指';
+    return '👇 中央 (右/左)';
+  }
+  function getTierLabel(tier) {
+    if (tier === 'top') return '上段・♯半音';
+    if (tier === 'mid') return '中段・基本';
+    return '下段・低音';
+  }
+
+  function parseMidiArrayBuffer(buffer) {
+    const data = new Uint8Array(buffer);
+    let pos = 0;
+
+    function readStr(len) {
+      let s = '';
+      for (let i = 0; i < len && pos < data.length; i++) s += String.fromCharCode(data[pos++]);
+      return s;
+    }
+    function readU32() {
+      const v = (data[pos] << 24) | (data[pos + 1] << 16) | (data[pos + 2] << 8) | data[pos + 3];
+      pos += 4;
+      return v >>> 0;
+    }
+    function readU16() {
+      const v = (data[pos] << 8) | data[pos + 1];
+      pos += 2;
+      return v;
+    }
+    function readVLQ() {
+      let value = 0;
+      while (pos < data.length) {
+        const b = data[pos++];
+        value = (value << 7) | (b & 0x7f);
+        if ((b & 0x80) === 0) break;
+      }
+      return value;
+    }
+
+    const headerTag = readStr(4);
+    if (headerTag !== 'MThd') throw new Error('有効なMIDIファイル（MThdヘッダ）ではありません。');
+    const headerLen = readU32();
+    const format = readU16();
+    const numTracks = readU16();
+    const division = readU16();
+    if (headerLen > 6) pos += (headerLen - 6);
+
+    const ppq = (division & 0x8000) ? 480 : division;
+    const tempoEvents = [];
+    const rawTracks = [];
+
+    for (let t = 0; t < numTracks && pos + 8 <= data.length; t++) {
+      const chunkId = readStr(4);
+      const chunkLen = readU32();
+      const trackEnd = Math.min(data.length, pos + chunkLen);
+
+      if (chunkId !== 'MTrk') { pos = trackEnd; continue; }
+
+      let tick = 0;
+      let runningStatus = 0;
+      let trackName = '';
+      let isPercussion = false;
+      const openNotes = new Map();
+      const rawNotes = [];
+
+      while (pos < trackEnd) {
+        const delta = readVLQ();
+        tick += delta;
+        if (pos >= trackEnd) break;
+
+        let status = data[pos];
+        if (status < 0x80) {
+          status = runningStatus;
+        } else {
+          pos++;
+          if (status < 0xf0) runningStatus = status;
+        }
+
+        if (status === 0xff) {
+          const metaType = data[pos++];
+          const len = readVLQ();
+          if (metaType === 0x51 && len === 3) {
+            const usPerQuarter = (data[pos] << 16) | (data[pos + 1] << 8) | data[pos + 2];
+            tempoEvents.push({ tick, usPerQuarter });
+          } else if (metaType === 0x03 && len > 0) {
+            const bytes = data.slice(pos, pos + len);
+            try {
+              trackName = new TextDecoder('utf-8', { fatal: false }).decode(bytes).replace(/\0/g, '').trim();
+            } catch (_) {
+              trackName = Array.from(bytes).map(c => String.fromCharCode(c)).join('').trim();
+            }
+          }
+          pos += len;
+        } else if (status === 0xf0 || status === 0xf7) {
+          const len = readVLQ();
+          pos += len;
+        } else {
+          const eventType = status & 0xf0;
+          const channel = status & 0x0f;
+          if (eventType === 0xc0 || eventType === 0xd0) {
+            pos += 1;
+          } else if (eventType === 0x90 || eventType === 0x80) {
+            const note = data[pos++];
+            const vel = data[pos++];
+            if (channel === 9) isPercussion = true;
+            const key = (channel << 7) | note;
+            if (eventType === 0x90 && vel > 0) {
+              if (!openNotes.has(key)) openNotes.set(key, []);
+              openNotes.get(key).push({ tick, velocity: vel / 127, channel });
+            } else {
+              const stack = openNotes.get(key);
+              if (stack && stack.length > 0) {
+                const startObj = stack.shift();
+                rawNotes.push({
+                  midi: note,
+                  startTick: startObj.tick,
+                  endTick: Math.max(tick, startObj.tick + Math.round(ppq / 8)),
+                  velocity: startObj.velocity,
+                  channel
+                });
+              }
+            }
+          } else if (eventType === 0xa0 || eventType === 0xb0 || eventType === 0xe0) {
+            pos += 2;
+          } else {
+            break;
+          }
+        }
+      }
+
+      openNotes.forEach((stack, key) => {
+        const note = key & 0x7f;
+        stack.forEach(s => {
+          rawNotes.push({
+            midi: note,
+            startTick: s.tick,
+            endTick: Math.max(tick, s.tick + ppq),
+            velocity: s.velocity,
+            channel: s.channel
+          });
+        });
+      });
+
+      rawTracks.push({ name: trackName, isPercussion, rawNotes });
+      pos = trackEnd;
+    }
+
+    tempoEvents.sort((a, b) => a.tick - b.tick);
+    const mergedTempos = [{ tick: 0, usPerQuarter: 500000, timeSec: 0 }];
+    for (const te of tempoEvents) {
+      const prev = mergedTempos[mergedTempos.length - 1];
+      if (te.tick === prev.tick) {
+        prev.usPerQuarter = te.usPerQuarter;
+      } else {
+        const dtSec = ((te.tick - prev.tick) / ppq) * (prev.usPerQuarter / 1e6);
+        mergedTempos.push({ tick: te.tick, usPerQuarter: te.usPerQuarter, timeSec: prev.timeSec + dtSec });
+      }
+    }
+
+    function tickToSec(targetTick) {
+      let seg = mergedTempos[0];
+      for (let i = 1; i < mergedTempos.length; i++) {
+        if (mergedTempos[i].tick <= targetTick) seg = mergedTempos[i];
+        else break;
+      }
+      return seg.timeSec + ((targetTick - seg.tick) / ppq) * (seg.usPerQuarter / 1e6);
+    }
+
+    const firstBpm = Math.round(60e6 / mergedTempos[0].usPerQuarter);
+    let totalDuration = 0;
+
+    const tracks = rawTracks.map((tr, idx) => {
+      const notes = tr.rawNotes
+        .map(rn => {
+          const time = tickToSec(rn.startTick);
+          const endTime = tickToSec(rn.endTick);
+          const duration = Math.max(0.06, endTime - time);
+          if (endTime > totalDuration) totalDuration = endTime;
+          return { midi: rn.midi, name: midiToNoteName(rn.midi), time, duration, velocity: rn.velocity, channel: rn.channel };
+        })
+        .sort((a, b) => (a.time - b.time) || (b.midi - a.midi));
+      return { name: tr.name || `Track ${idx + 1}`, isPercussion: tr.isPercussion, notes };
+    });
+
+    return { format, ppq, bpm: firstBpm, duration: totalDuration, tracks };
+  }
+
+  function buildDemoSong(demoKey) {
+    function seqToNotes(items, bpm, startBeat = 0) {
+      const secPerBeat = 60 / bpm;
+      let beat = startBeat;
+      const out = [];
+      for (const item of items) {
+        const [pitch, len, vel = 0.8] = item;
+        if (pitch !== null) {
+          const midi = typeof pitch === 'string' ? noteNameToMidi(pitch) : pitch;
+          out.push({ midi, name: midiToNoteName(midi), time: beat * secPerBeat, duration: Math.max(0.1, len * secPerBeat * 0.92), velocity: vel, channel: 0 });
+        }
+        beat += len;
+      }
+      return out;
+    }
+
+    if (demoKey === 'twinkle') {
+      const bpm = 96;
+      const mel = seqToNotes([
+        ['C4',1],['C4',1],['G4',1],['G4',1],['A4',1],['A4',1],['G4',2],
+        ['F4',1],['F4',1],['E4',1],['E4',1],['D4',1],['D4',1],['C4',2],
+        ['G4',1],['G4',1],['F4',1],['F4',1],['E4',1],['E4',1],['D4',2],
+        ['G4',1],['G4',1],['F4',1],['F4',1],['E4',1],['E4',1],['D4',2],
+        ['C4',1],['C4',1],['G4',1],['G4',1],['A4',1],['A4',1],['G4',2],
+        ['F4',1],['F4',1],['E4',1],['E4',1],['D4',1],['D4',1],['C4',2]
+      ], bpm);
+      const chords = seqToNotes([
+        ['C3',4,0.45],['F3',2,0.45],['C3',2,0.45],['F3',2,0.45],['C3',2,0.45],['G3',2,0.45],['C3',2,0.45],
+        ['C3',2,0.45],['F3',2,0.45],['C3',2,0.45],['G3',2,0.45],['C3',2,0.45],['F3',2,0.45],['C3',2,0.45],['G3',2,0.45],
+        ['C3',4,0.45],['F3',2,0.45],['C3',2,0.45],['F3',2,0.45],['C3',2,0.45],['G3',2,0.45],['C3',2,0.45]
+      ], bpm);
+      return {
+        title: '⭐ きらきら星（中段17キー基本）',
+        bpm,
+        duration: mel[mel.length - 1].time + 1.5,
+        tracks: [
+          { name: 'Vocal Melody (基本C調)', isPercussion: false, notes: mel },
+          { name: 'Accompaniment Pad', isPercussion: false, notes: chords }
+        ]
+      };
+    }
+
+    if (demoKey === 'pop') {
+      const bpm = 104;
+      const mel = seqToNotes([
+        ['E4',0.5],['G4',0.5],['C5',1.5],['B4',0.5],['A4',1],['G4',1],
+        ['E4',1],['G4',1],['A4',1.5],['G4',0.5],
+        ['F4',1],['E4',0.5],['D4',0.5],['E4',1.5],['C4',0.5],
+        ['D4',1],['E4',0.5],['F4',0.5],['G4',2],
+        ['E4',0.5],['G4',0.5],['C5',1.5],['D5',0.5],['E5',1],['D5',1],
+        ['C5',1],['B4',0.5],['A4',0.5],['G4',1.5],['F#4',0.5],
+        ['G4',1],['A4',1],['B4',1],['C5',1],
+        ['D5',1.5],['C5',0.5],['C5',2]
+      ], bpm);
+      const bg = seqToNotes([
+        ['C3',2,0.4],['G3',2,0.4],['G2',2,0.4],['D3',2,0.4],
+        ['A2',2,0.4],['E3',2,0.4],['E2',2,0.4],['B2',2,0.4],
+        ['F2',2,0.4],['C3',2,0.4],['C3',2,0.4],['G3',2,0.4],
+        ['F2',2,0.4],['C3',2,0.4],['G2',2,0.4],['D3',2,0.4],
+        ['C3',2,0.4],['G3',2,0.4],['G2',2,0.4],['D3',2,0.4],
+        ['A2',2,0.4],['E3',2,0.4],['E2',2,0.4],['B2',2,0.4],
+        ['F2',2,0.4],['C3',2,0.4],['G2',2,0.4],['D3',2,0.4],
+        ['C3',4,0.45]
+      ], bpm);
+      return {
+        title: '🌸 ポップス風メロディ（親指練習）',
+        bpm,
+        duration: mel[mel.length - 1].time + 1.8,
+        tracks: [
+          { name: 'Lead Melody (ボーカル風)', isPercussion: false, notes: mel },
+          { name: 'Backing Harmony', isPercussion: false, notes: bg }
+        ]
+      };
+    }
+
+    if (demoKey === 'canon') {
+      const bpm = 86;
+      const mel = seqToNotes([
+        ['E5',2],['D5',2],['C5',2],['B4',2],
+        ['A4',2],['G4',2],['A4',2],['B4',2],
+        ['C5',1],['G4',1],['B4',1],['G4',1],['A4',1],['E4',1],['G4',1],['E4',1],
+        ['F4',1],['A3',1],['G4',1],['G3',1],['F4',1],['F3',1],['G4',1],['B3',1],
+        ['C4',1],['E4',1],['G4',1],['C5',1],['B4',1],['G4',1],['D5',1],['B4',1],
+        ['C5',4]
+      ], bpm);
+      const bass = seqToNotes([
+        ['C3',2,0.42],['G2',2,0.42],['A2',2,0.42],['E2',2,0.42],
+        ['F2',2,0.42],['C3',2,0.42],['F2',2,0.42],['G2',2,0.42],
+        ['C3',2,0.42],['G2',2,0.42],['A2',2,0.42],['E2',2,0.42],
+        ['F2',2,0.42],['C3',2,0.42],['F2',2,0.42],['G2',2,0.42],
+        ['C3',4,0.42],['G2',4,0.42],['C3',4,0.45]
+      ], bpm);
+      return {
+        title: '🌿 カノン風（下段低音〜中段）',
+        bpm,
+        duration: mel[mel.length - 1].time + 2.0,
+        tracks: [
+          { name: 'Melody (低音F3-B3入り)', isPercussion: false, notes: mel },
+          { name: 'Warm Bass Backing', isPercussion: false, notes: bass }
+        ]
+      };
+    }
+
+    const bpm = 82;
+    const mel = seqToNotes([
+      ['F3',1],['F#3',1],['G3',1],['G#3',1],['A3',1],['A#3',1],['B3',1],
+      ['C4',1],['C#4',1],['D4',1],['D#4',1],['E4',1],['F4',1],['F#4',1],
+      ['G4',1],['G#4',1],['A4',1],['A#4',1],['B4',1],['C5',2],
+      ['C5',1],['A#4',1],['A4',1],['G#4',1],['G4',1],['F#4',1],['F4',1],['E4',1],
+      ['D#4',1],['D4',1],['C#4',1],['C4',2]
+    ], bpm);
+    return {
+      title: '✨ 41音・3段クロマチック練習',
+      bpm,
+      duration: mel[mel.length - 1].time + 1.5,
+      tracks: [{ name: 'Chromatic Guide (3段ステップ)', isPercussion: false, notes: mel }]
+    };
+  }
+
+  let playbackCtx = null;
+  let masterCompressor = null;
+  let kalimbaReverbBus = null;
+
+  function ensureAudioContext() {
+    if (!playbackCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      playbackCtx = new AC();
+      masterCompressor = playbackCtx.createDynamicsCompressor();
+      masterCompressor.threshold.value = -14;
+      masterCompressor.knee.value = 18;
+      masterCompressor.ratio.value = 6;
+      masterCompressor.connect(playbackCtx.destination);
+
+      // Subtle warm acoustic wooden-body resonance / room ambience bus
+      kalimbaReverbBus = playbackCtx.createGain();
+      kalimbaReverbBus.gain.value = 0.22;
+      const d1 = playbackCtx.createDelay(0.25); d1.delayTime.value = 0.043;
+      const d2 = playbackCtx.createDelay(0.25); d2.delayTime.value = 0.089;
+      const fb = playbackCtx.createGain(); fb.gain.value = 0.28;
+      const lp = playbackCtx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2800;
+      kalimbaReverbBus.connect(d1);
+      d1.connect(lp);
+      lp.connect(d2);
+      d2.connect(fb);
+      fb.connect(d1);
+      lp.connect(masterCompressor);
+      d2.connect(masterCompressor);
+    }
+    if (playbackCtx.state === 'suspended') playbackCtx.resume();
+    return playbackCtx;
+  }
+
+  // Authentic acoustic kalimba synthesis with 3 timbres (okoume / musicbox / walnut)
+  function playKalimbaNote(midi, whenSec, velocity = 0.8, volumeScale = 0.75) {
+    if (volumeScale <= 0.001) return;
+    const ctx = ensureAudioContext();
+    const now = Math.max(ctx.currentTime, whenSec);
+    const freq = midiToFreq(midi);
+    const timbre = state.timbre || 'okoume';
+
+    const gainLevel = Math.min(0.46, velocity * volumeScale * 0.35);
+    const baseDecay = Math.max(0.6, Math.min(2.3, 2.35 - (midi - 53) * 0.042));
+    const decayTime = timbre === 'walnut' ? baseDecay * 0.82 : timbre === 'musicbox' ? baseDecay * 1.15 : baseDecay;
+
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0.0001, now);
+    env.gain.linearRampToValueAtTime(gainLevel, now + (timbre === 'walnut' ? 0.007 : 0.003));
+    env.gain.exponentialRampToValueAtTime(0.0008, now + decayTime);
+    env.connect(masterCompressor);
+    if (kalimbaReverbBus) env.connect(kalimbaReverbBus);
+
+    // Singing fundamental
+    const osc1 = ctx.createOscillator();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(freq, now);
+    osc1.connect(env);
+    osc1.start(now);
+    osc1.stop(now + decayTime + 0.04);
+
+    // Metallic tine pluck transient (inharmonic ~2.88x metal tine mode)
+    const chimeGainRatio = timbre === 'musicbox' ? 0.36 : timbre === 'walnut' ? 0.12 : 0.24;
+    const chimeDecay = timbre === 'musicbox' ? 0.26 : timbre === 'walnut' ? 0.08 : 0.13;
+    const chimeEnv = ctx.createGain();
+    chimeEnv.gain.setValueAtTime(0.0001, now);
+    chimeEnv.gain.linearRampToValueAtTime(gainLevel * chimeGainRatio, now + 0.002);
+    chimeEnv.gain.exponentialRampToValueAtTime(0.0005, now + chimeDecay);
+    chimeEnv.connect(masterCompressor);
+
+    const osc2 = ctx.createOscillator();
+    osc2.type = timbre === 'walnut' ? 'sine' : 'triangle';
+    osc2.frequency.setValueAtTime(freq * (timbre === 'walnut' ? 2.0 : 2.88), now);
+    osc2.connect(chimeEnv);
+    osc2.start(now);
+    osc2.stop(now + chimeDecay + 0.03);
+
+    // Extra crystalline bell shimmer for Music Box timbre
+    if (timbre === 'musicbox') {
+      const bellEnv = ctx.createGain();
+      bellEnv.gain.setValueAtTime(0.0001, now);
+      bellEnv.gain.linearRampToValueAtTime(gainLevel * 0.14, now + 0.0015);
+      bellEnv.gain.exponentialRampToValueAtTime(0.0004, now + 0.18);
+      bellEnv.connect(masterCompressor);
+      const osc3 = ctx.createOscillator();
+      osc3.type = 'sine';
+      osc3.frequency.setValueAtTime(freq * 5.4, now);
+      osc3.connect(bellEnv);
+      osc3.start(now);
+      osc3.stop(now + 0.2);
+    }
+  }
+
+  function playBackingNote(midi, whenSec, durationSec, velocity = 0.6, volumeScale = 0.55) {
+    if (volumeScale <= 0.001) return;
+    const ctx = ensureAudioContext();
+    const now = Math.max(ctx.currentTime, whenSec);
+    const freq = midiToFreq(midi);
+    const dur = Math.min(2.5, Math.max(0.12, durationSec));
+    const gainLevel = Math.min(0.22, velocity * volumeScale * 0.16);
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(Math.min(2200, freq * 3.5), now);
+    filter.connect(masterCompressor);
+
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0.0001, now);
+    env.gain.linearRampToValueAtTime(gainLevel, now + 0.015);
+    env.gain.exponentialRampToValueAtTime(Math.max(0.0008, gainLevel * 0.35), now + dur);
+    env.gain.exponentialRampToValueAtTime(0.0005, now + dur + 0.22);
+    env.connect(filter);
+
+    const osc = ctx.createOscillator();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, now);
+    osc.connect(env);
+    osc.start(now);
+    osc.stop(now + dur + 0.25);
+  }
+
+  const state = {
+    midi: null, songTitle: '', selectedTrackIdx: 0,
+    rawMelodyNotes: [], melodyNotes: [], backingNotes: [],
+    currentNoteIdx: 0, notationMode: 'both', practiceMode: 'auto',
+    appMode: 'practice', // 'practice' | 'demo' | 'tune'
+    timbre: 'okoume', demoStyle: 'solo', sweepTimers: [], isSweeping: false,
+    tuneOrder: [], tuneIdx: 0, tunedDoneSet: new Set(), tuneStableStartMs: 0,
+    tuneSmoothedFreq: 0, tuneLastHeardMs: 0, tuneSimCents: null,
+    speedPercent: 100, octaveShift: 0, transpose: 0, thinning: 'mono',
+    melodyVol: 0.75, backingVol: 0.55,
+    loopEnabled: false, loopCount: 8, loopStartIdx: 0, showWaterfall: true,
+    isPlaying: false, isCountingDown: false, countdownTimer: null,
+    songTime: 0, lastFramePerf: 0,
+    nextMelodyScheduleIdx: 0, nextBackingScheduleIdx: 0,
+    schedulerTimer: null, previewStopTimer: null, isPreviewing: false,
+    tunerActive: false, tunerCtx: null, tunerStream: null,
+    tunerAnalyser: null, tunerBuf: null, lastWaitAdvanceMs: 0
+  };
+
+  const els = {
+    appModeNav: document.getElementById('appModeNav'),
+    demoStudio: document.getElementById('demoStudio'),
+    demoPlayBtn: document.getElementById('demoPlayBtn'),
+    sweep41Btn: document.getElementById('sweep41Btn'),
+    timbreSelect: document.getElementById('timbreSelect'),
+    demoStyleSeg: document.getElementById('demoStyleSeg'),
+    tuneStudio: document.getElementById('tuneStudio'),
+    tuneTargetBadge: document.getElementById('tuneTargetBadge'),
+    tuneTargetName: document.getElementById('tuneTargetName'),
+    tuneTargetFreq: document.getElementById('tuneTargetFreq'),
+    tuneRefToneBtn: document.getElementById('tuneRefToneBtn'),
+    tuneMicBtn: document.getElementById('tuneMicBtn'),
+    tuneGuidance: document.getElementById('tuneGuidance'),
+    tuneNeedle: document.getElementById('tuneNeedle'),
+    tuneMeterFill: document.getElementById('tuneMeterFill'),
+    tuneCmpTargetNote: document.getElementById('tuneCmpTargetNote'),
+    tuneCmpTargetHz: document.getElementById('tuneCmpTargetHz'),
+    tuneCmpDiffCard: document.getElementById('tuneCmpDiffCard'),
+    tuneCmpDiffMain: document.getElementById('tuneCmpDiffMain'),
+    tuneCmpDiffSub: document.getElementById('tuneCmpDiffSub'),
+    tuneLiveDot: document.getElementById('tuneLiveDot'),
+    tuneLiveStatusText: document.getElementById('tuneLiveStatusText'),
+    tuneCmpNowNote: document.getElementById('tuneCmpNowNote'),
+    tuneCmpNowHz: document.getElementById('tuneCmpNowHz'),
+    tuneDiagramBadge: document.getElementById('tuneDiagramBadge'),
+    tuneSvgTineGroup: document.getElementById('tuneSvgTineGroup'),
+    tuneSvgTineBody: document.getElementById('tuneSvgTineBody'),
+    tuneSvgTineLabel: document.getElementById('tuneSvgTineLabel'),
+    tuneSvgIdleOverlay: document.getElementById('tuneSvgIdleOverlay'),
+    tuneSvgHighOverlay: document.getElementById('tuneSvgHighOverlay'),
+    tuneSvgLowOverlay: document.getElementById('tuneSvgLowOverlay'),
+    tuneSvgOkOverlay: document.getElementById('tuneSvgOkOverlay'),
+    tuneSvgHighStrength: document.getElementById('tuneSvgHighStrength'),
+    tuneSvgLowStrength: document.getElementById('tuneSvgLowStrength'),
+    tuneSimBtns: document.getElementById('tuneSimBtns'),
+    tunePrevBtn: document.getElementById('tunePrevBtn'),
+    tuneNextBtn: document.getElementById('tuneNextBtn'),
+    tuneAutoNextCheck: document.getElementById('tuneAutoNextCheck'),
+    tuneMarkDoneBtn: document.getElementById('tuneMarkDoneBtn'),
+    tuneProgressPill: document.getElementById('tuneProgressPill'),
+    tuneResetDoneBtn: document.getElementById('tuneResetDoneBtn'),
+    hudStrip: document.getElementById('hudStrip'),
+    transportRow: document.getElementById('transportRow'),
+    ribbonWrap: document.getElementById('ribbonWrap'),
+    tierTopRow: document.getElementById('tierTopRow'),
+    tierMidRow: document.getElementById('tierMidRow'),
+    tierLowRow: document.getElementById('tierLowRow'),
+    waterfallWrap: document.getElementById('waterfallWrap'),
+    waterfallCanvas: document.getElementById('waterfallCanvas'),
+    waterfallToggleBtn: document.getElementById('waterfallToggleBtn'),
+    notationSeg: document.getElementById('notationSeg'),
+    practiceModeSeg: document.getElementById('practiceModeSeg'),
+    speedPresets: document.getElementById('speedPresets'),
+    speedSlider: document.getElementById('speedSlider'),
+    speedSliderVal: document.getElementById('speedSliderVal'),
+    bpmReadout: document.getElementById('bpmReadout'),
+    playBtn: document.getElementById('playBtn'),
+    resetBtn: document.getElementById('resetBtn'),
+    prevNoteBtn: document.getElementById('prevNoteBtn'),
+    nextNoteBtn: document.getElementById('nextNoteBtn'),
+    scoreRibbon: document.getElementById('scoreRibbon'),
+    filterStats: document.getElementById('filterStats'),
+    dropZone: document.getElementById('dropZone'),
+    fileInput: document.getElementById('fileInput'),
+    fileNameDisplay: document.getElementById('fileNameDisplay'),
+    loadedSongTag: document.getElementById('loadedSongTag'),
+    demoBtns: document.getElementById('demoBtns'),
+    trackSelect: document.getElementById('trackSelect'),
+    trackCountHint: document.getElementById('trackCountHint'),
+    soloBtn: document.getElementById('soloBtn'),
+    rangeSummary: document.getElementById('rangeSummary'),
+    rangeSummaryText: document.getElementById('rangeSummaryText'),
+    autoFitBtn: document.getElementById('autoFitBtn'),
+    octaveShiftSelect: document.getElementById('octaveShiftSelect'),
+    transposeSelect: document.getElementById('transposeSelect'),
+    thinningSelect: document.getElementById('thinningSelect'),
+    loopCheck: document.getElementById('loopCheck'),
+    loopCountInput: document.getElementById('loopCountInput'),
+    melodyVolSlider: document.getElementById('melodyVolSlider'),
+    melodyVolVal: document.getElementById('melodyVolVal'),
+    backingVolSlider: document.getElementById('backingVolSlider'),
+    backingVolVal: document.getElementById('backingVolVal'),
+    countdownCheck: document.getElementById('countdownCheck'),
+    statusBar: document.getElementById('statusBar'),
+    hudNowPill: document.getElementById('hudNowPill'),
+    hudNowBadges: document.getElementById('hudNowBadges'),
+    hudNowSub: document.getElementById('hudNowSub'),
+    hudNextPill: document.getElementById('hudNextPill'),
+    hudNextSub: document.getElementById('hudNextSub'),
+    hudProgress: document.getElementById('hudProgress'),
+    hudTime: document.getElementById('hudTime'),
+    tunerBtn: document.getElementById('tunerBtn'),
+    tunerBar: document.getElementById('tunerBar'),
+    tunerStopBtn: document.getElementById('tunerStopBtn'),
+    tunerNote: document.getElementById('tunerNote'),
+    tunerKalimbaPos: document.getElementById('tunerKalimbaPos'),
+    tunerCents: document.getElementById('tunerCents'),
+    tunerPointer: document.getElementById('tunerPointer')
+  };
+
+  const tineDomMap = new Map();
+
+  function calcTineHeightPx(tier, col) {
+    const dist = Math.abs(col - 8);
+    if (tier === 'top') return Math.round(70 - dist * 3.0);
+    if (tier === 'mid') return Math.round(92 - dist * 3.8);
+    return Math.round(80 - dist * 5.0);
+  }
+
+  function buildNumHtmlForMidi(midi) {
+    const pc = ((midi % 12) + 12) % 12;
+    const oct = Math.floor(midi / 12) - 1;
+    const base = NUM_BASE[pc].replace('#', '♯');
+    if (oct <= 3) return `<span>${base}</span><span class="oct-dot">•</span>`;
+    if (oct === 5) return `<span class="oct-dot">•</span><span>${base}</span>`;
+    if (oct >= 6) return `<span class="oct-dot">••</span><span>${base}</span>`;
+    return `<span>${base}</span>`;
+  }
+
+  function buildKalimbaBoard() {
+    els.tierTopRow.innerHTML = '';
+    els.tierMidRow.innerHTML = '';
+    els.tierLowRow.innerHTML = '';
+    tineDomMap.clear();
+
+    [
+      { key: 'top', container: els.tierTopRow },
+      { key: 'mid', container: els.tierMidRow },
+      { key: 'low', container: els.tierLowRow }
+    ].forEach(({ key, container }) => {
+      for (let col = 0; col < 17; col++) {
+        const slot = document.createElement('div');
+        slot.className = 'tine-slot' + (col === 8 ? ' is-center' : '');
+        const tine = ALL_TINES.find(t => t.tier === key && t.col === col);
+
+        if (!tine) {
+          const hole = document.createElement('div');
+          hole.className = 'tine-empty-hole';
+          hole.title = '拡張用空きスロット';
+          slot.appendChild(hole);
+        } else {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = `tine-btn tier-${key}` +
+            (tine.isDup ? ' is-dup' : '') +
+            (key === 'mid' && LANDMARK_COLS.has(col) ? ' is-landmark' : '') +
+            (key === 'low' && tine.isSharp ? ' is-sharp' : '');
+          btn.style.height = calcTineHeightPx(key, col) + 'px';
+          btn.dataset.tineId = tine.id;
+          btn.title = `${getTierLabel(key)} | ${tine.numLabel} (${tine.noteName} / ${tine.kanaLabel})${tine.isDup ? ' ※中段と同音' : ''}`;
+
+          const badge = document.createElement('span');
+          badge.className = 'tine-badge';
+          const prim = document.createElement('span');
+          prim.className = 'tine-primary';
+          const sec = document.createElement('span');
+          sec.className = 'tine-secondary';
+          badge.appendChild(prim);
+          badge.appendChild(sec);
+          btn.appendChild(badge);
+
+          btn.addEventListener('pointerdown', (e) => {
+            e.preventDefault();
+            pluckTineManually(tine, btn);
+          });
+
+          slot.appendChild(btn);
+          tineDomMap.set(tine.id, btn);
+        }
+        container.appendChild(slot);
+      }
+    });
+
+    refreshTineLabels();
+  }
+
+  function refreshTineLabels() {
+    ALL_TINES.forEach(tine => {
+      const btn = tineDomMap.get(tine.id);
+      if (!btn) return;
+      const primEl = btn.querySelector('.tine-primary');
+      const secEl = btn.querySelector('.tine-secondary');
+      if (state.notationMode === 'num') {
+        primEl.innerHTML = buildNumHtmlForMidi(tine.midi);
+        secEl.textContent = '';
+        secEl.style.display = 'none';
+      } else if (state.notationMode === 'note') {
+        primEl.textContent = tine.noteName.replace('#', '♯');
+        secEl.textContent = '';
+        secEl.style.display = 'none';
+      } else if (state.notationMode === 'kana') {
+        primEl.textContent = tine.kanaLabel;
+        secEl.textContent = tine.numLabel;
+        secEl.style.display = 'block';
+      } else {
+        primEl.innerHTML = buildNumHtmlForMidi(tine.midi);
+        secEl.textContent = tine.noteName.replace('#', '♯');
+        secEl.style.display = 'block';
+      }
+    });
+  }
+
+  function pluckTineManually(tine, btn) {
+    playKalimbaNote(tine.midi, 0, 0.9, state.appMode === 'tune' ? 0.9 : Math.max(0.7, state.melodyVol));
+    btn.classList.add('is-plucked');
+    setTimeout(() => btn.classList.remove('is-plucked'), 160);
+    if (state.appMode === 'tune') {
+      const idx = state.tuneOrder.findIndex(t => t.id === tine.id);
+      if (idx >= 0) selectTuneIndex(idx, false);
+      return;
+    }
+    els.statusBar.textContent = `🔔 試奏: ${tine.numLabel}（${tine.noteName.replace('#', '♯')} / ${tine.kanaLabel}）— ${getTierLabel(tine.tier)} · ${getThumbLabel(tine.thumb)}`;
+  }
+
+  function buildMelodyRelayTrack(midiObj, primaryIdx) {
+    const primary = midiObj.tracks[primaryIdx];
+    if (!primary || !primary.notes || !primary.notes.length) return null;
+
+    const secPerBar = (60 / (midiObj.bpm || 120)) * 4;
+    const candidates = midiObj.tracks
+      .map((tr, idx) => ({ tr, idx }))
+      .filter(({ tr }) => !tr.isPercussion && !tr.isVirtualRelay && tr.notes.length >= 20 && !/tuba|bass|drum|perc/i.test(tr.name))
+      .filter(({ tr }) => {
+        const inRangeRatio = tr.notes.filter(n => n.midi >= MIN_KALIMBA_MIDI && n.midi <= MAX_KALIMBA_MIDI).length / tr.notes.length;
+        return inRangeRatio >= 0.75;
+      });
+    if (candidates.length < 2) return null;
+
+    const totalBars = Math.ceil(((midiObj.duration || 0) + 0.5) / secPerBar);
+    const relayNotes = [];
+    let prevIdx = primaryIdx;
+    const altTracksUsed = new Set();
+
+    for (let b = 0; b < totalBars; b++) {
+      const t0 = b * secPerBar;
+      const t1 = (b + 1) * secPerBar;
+      const pNotes = primary.notes.filter(n => n.time >= t0 && n.time < t1);
+      let chosenIdx = primaryIdx;
+      let chosenNotes = pNotes;
+
+      if (pNotes.length <= 2) {
+        let bestAlt = null;
+        let bestScore = pNotes.length * 2.4;
+        for (const { tr, idx } of candidates) {
+          if (idx === primaryIdx) continue;
+          const aNotes = tr.notes.filter(n => n.time >= t0 && n.time < t1);
+          if (aNotes.length < 3) continue;
+          const inRange = aNotes.filter(n => n.midi >= MIN_KALIMBA_MIDI && n.midi <= MAX_KALIMBA_MIDI).length / aNotes.length;
+          const contBonus = (idx === prevIdx) ? 1.25 : 1.0;
+          const s = aNotes.length * (0.4 + inRange) * contBonus;
+          if (s > bestScore) { bestScore = s; bestAlt = { idx, notes: aNotes }; }
+        }
+        if (bestAlt) {
+          chosenIdx = bestAlt.idx;
+          chosenNotes = bestAlt.notes;
+          altTracksUsed.add(midiObj.tracks[chosenIdx].name);
+        }
+      }
+      if (chosenNotes.length) {
+        const srcName = midiObj.tracks[chosenIdx].name;
+        relayNotes.push(...chosenNotes.map(n => ({ ...n, sourceTrack: srcName })));
+        prevIdx = chosenIdx;
+      }
+    }
+
+    if (altTracksUsed.size === 0 || relayNotes.length <= primary.notes.length + 15) return null;
+    relayNotes.sort((a, b) => (a.time - b.time) || (b.midi - a.midi));
+    const altLabel = Array.from(altTracksUsed).slice(0, 2).join('・');
+    return {
+      name: `${primary.name} ＋ ${altLabel} リフ自動つなぎ`,
+      isPercussion: false,
+      isVirtualRelay: true,
+      notes: relayNotes
+    };
+  }
+
+  function loadMidiObject(midiObj, titleLabel, preferredTrackIdx = null, preferRelay = false) {
+    stopPlayback();
+    stopPreview();
+    state.midi = midiObj;
+    state.songTitle = titleLabel;
+    els.loadedSongTag.textContent = titleLabel;
+
+    els.trackSelect.innerHTML = '';
+    let bestIdx = -1;
+    let maxScore = -Infinity;
+    let validCount = 0;
+
+    // Filter out any previously appended virtual relay tracks if reloading same object
+    midiObj.tracks = midiObj.tracks.filter(t => !t.isVirtualRelay);
+
+    midiObj.tracks.forEach((tr, idx) => {
+      if (!tr.notes || tr.notes.length === 0) return;
+
+      const timeBuckets = new Map();
+      tr.notes.forEach(n => {
+        const b = Math.round(n.time * 12);
+        timeBuckets.set(b, (timeBuckets.get(b) || 0) + 1);
+      });
+      let singleCount = 0;
+      timeBuckets.forEach(c => { if (c === 1) singleCount++; });
+      const singleRatio = timeBuckets.size ? singleCount / timeBuckets.size : 0;
+
+      let score = Math.min(300, tr.notes.length * 0.25);
+      let tag = '[伴奏・和音]';
+
+      if (singleRatio > 0.85 && tr.notes.length >= 12) {
+        tag = '[★主旋律候補]'; score += 1000;
+      } else if (singleRatio > 0.55 && tr.notes.length >= 12) {
+        tag = '[単音ソロ]'; score += 500;
+      }
+
+      const lower = (tr.name || '').toLowerCase();
+      if (/vocal|vox|melody|sing|lead|uta|メロ|ボーカル|主旋律/.test(lower)) {
+        tag = '[👑大本命メロディ]'; score += 5000;
+      }
+      if (tr.isPercussion || /bass|drum|perc|click|rhythm|ベース|ドラム/.test(lower)) {
+        tag = '[リズム・低音]'; score -= 10000;
+      }
+
+      const avgMidi = tr.notes.reduce((s, n) => s + n.midi, 0) / tr.notes.length;
+      if (avgMidi >= 56 && avgMidi <= 84) score += 250;
+
+      const opt = document.createElement('option');
+      opt.value = idx;
+      opt.textContent = `${tag} ${tr.name} (${tr.notes.length}音)`;
+      els.trackSelect.appendChild(opt);
+      validCount++;
+
+      if (score > maxScore) { maxScore = score; bestIdx = idx; }
+    });
+
+    if (validCount === 0) {
+      els.trackCountHint.textContent = '0トラック';
+      els.statusBar.textContent = '⚠ 有効な音符データを含むトラックが見つかりませんでした。';
+      return;
+    }
+
+    const basePrimaryIdx = (preferredTrackIdx !== null && midiObj.tracks[preferredTrackIdx]?.notes?.length)
+      ? preferredTrackIdx
+      : (bestIdx >= 0 ? bestIdx : parseInt(els.trackSelect.options[0].value, 10));
+
+    // Build automatic melody relay track when multiple melodic parts trade off
+    let relayIdx = null;
+    const relayTrack = buildMelodyRelayTrack(midiObj, basePrimaryIdx);
+    if (relayTrack) {
+      relayIdx = midiObj.tracks.length;
+      midiObj.tracks.push(relayTrack);
+      const relayOpt = document.createElement('option');
+      relayOpt.value = relayIdx;
+      relayOpt.textContent = `[🌟主旋律リレー] ${relayTrack.name} (${relayTrack.notes.length}音)`;
+      els.trackSelect.insertBefore(relayOpt, els.trackSelect.firstChild);
+    }
+
+    els.trackCountHint.textContent = `${validCount}トラック検出${relayTrack ? '＋自動リレー生成' : ''}`;
+    state.selectedTrackIdx = (preferRelay && relayIdx !== null) ? relayIdx : basePrimaryIdx;
+    els.trackSelect.value = String(state.selectedTrackIdx);
+    state.octaveShift = 0;
+    state.transpose = 0;
+    els.octaveShiftSelect.value = '0';
+    els.transposeSelect.value = '0';
+
+    autoFitOctaveIfNeeded(false);
+    rebuildTrackNotes();
+  }
+
+  function autoFitOctaveIfNeeded(forceNotify = true) {
+    if (!state.midi) return;
+    const tr = state.midi.tracks[state.selectedTrackIdx];
+    if (!tr || tr.notes.length === 0) return;
+
+    let bestOct = 0, bestInRange = -1, bestCenterDist = Infinity;
+    for (const oct of [0, 1, -1, 2, -2]) {
+      const shift = oct * 12 + state.transpose;
+      let inRange = 0, sum = 0;
+      for (const n of tr.notes) {
+        const m = n.midi + shift;
+        if (m >= MIN_KALIMBA_MIDI && m <= MAX_KALIMBA_MIDI) inRange++;
+        sum += m;
+      }
+      const centerDist = Math.abs((sum / tr.notes.length) - 69);
+      if (inRange > bestInRange || (inRange === bestInRange && centerDist < bestCenterDist)) {
+        bestInRange = inRange; bestCenterDist = centerDist; bestOct = oct;
+      }
+    }
+
+    state.octaveShift = bestOct;
+    els.octaveShiftSelect.value = String(bestOct);
+    if (forceNotify) {
+      rebuildTrackNotes();
+      els.statusBar.textContent = `✨ 41音音域（F3〜F6）に最も収まるオクターブ（${bestOct >= 0 ? '+' + bestOct : bestOct}）へ自動調整しました。`;
+    }
+  }
+
+  function rebuildTrackNotes() {
+    if (!state.midi) return;
+    stopPlayback();
+    const tr = state.midi.tracks[state.selectedTrackIdx];
+    if (!tr) return;
+
+    const totalShift = state.octaveShift * 12 + state.transpose;
+    const shifted = tr.notes.map(n => {
+      const midi = Math.max(0, Math.min(127, n.midi + totalShift));
+      const tine = getTineForMidi(midi);
+      return {
+        midi, name: midiToNoteName(midi),
+        numLabel: midiToNumberNotation(midi), kanaLabel: midiToKana(midi),
+        time: n.time, duration: n.duration, velocity: n.velocity, tine,
+        sourceTrack: n.sourceTrack || ''
+      };
+    });
+
+    state.rawMelodyNotes = shifted;
+    state.melodyNotes = applyThumbFilter(shifted, state.thinning);
+
+    const rawBacking = [];
+    let backingTrackCount = 0;
+    state.midi.tracks.forEach((otherTr, idx) => {
+      if (idx === state.selectedTrackIdx || otherTr.isPercussion || otherTr.isVirtualRelay || !otherTr.notes.length) return;
+      backingTrackCount++;
+      otherTr.notes.forEach(n => {
+        rawBacking.push({ midi: Math.max(24, Math.min(108, n.midi + state.transpose)), time: n.time, duration: n.duration, velocity: n.velocity });
+      });
+    });
+    rawBacking.sort((a, b) => (a.time - b.time) || (a.midi - b.midi));
+    // Deduplicate identical pitches occurring within 25ms across orchestral/band tracks & gently scale polyphony
+    const polyScale = backingTrackCount > 3 ? Math.max(0.32, 1.35 / Math.sqrt(backingTrackCount)) : 1.0;
+    const backing = [];
+    for (const bn of rawBacking) {
+      let dup = false;
+      for (let k = backing.length - 1; k >= 0; k--) {
+        if (bn.time - backing[k].time > 0.025) break;
+        if (backing[k].midi === bn.midi) { dup = true; break; }
+      }
+      if (!dup) backing.push({ midi: bn.midi, time: bn.time, duration: bn.duration, velocity: bn.velocity * polyScale });
+    }
+    state.backingNotes = backing;
+
+    const total = state.melodyNotes.length;
+    const inRange = state.melodyNotes.filter(n => n.tine !== null).length;
+    const pct = total ? Math.round((inRange / total) * 100) : 100;
+    const tiersUsed = new Set(state.melodyNotes.filter(n => n.tine).map(n => n.tine.tier));
+    const tierHint = tiersUsed.has('top') || tiersUsed.has('low') ? '41音クロマチック活用' : '中段17キーのみで演奏可能';
+
+    if (pct === 100) {
+      els.rangeSummary.className = 'range-summary good';
+      els.rangeSummaryText.textContent = `✅ 音域OK: 全${total}音がF3〜F6内に収まっています（${tierHint}）`;
+    } else {
+      els.rangeSummary.className = 'range-summary warn';
+      els.rangeSummaryText.textContent = `⚠ 音域内 ${pct}% (${inRange}/${total}音) — 範囲外はオクターブ調整をお試しください`;
+    }
+
+    els.filterStats.textContent = (state.thinning !== 'raw' && shifted.length !== state.melodyNotes.length)
+      ? `親指整理: ${shifted.length}音 → ${state.melodyNotes.length}音`
+      : `全 ${state.melodyNotes.length} 音`;
+
+    state.currentNoteIdx = 0;
+    state.loopStartIdx = 0;
+    state.songTime = 0;
+
+    renderScoreRibbon();
+    updateDisplayForIndex(0);
+    updateBpmReadout();
+  }
+
+  function applyThumbFilter(notes, mode) {
+    if (!notes.length || mode === 'raw') return notes.slice();
+    const mono = [];
+    let i = 0;
+    while (i < notes.length) {
+      let best = notes[i];
+      let j = i + 1;
+      while (j < notes.length && (notes[j].time - notes[i].time) < 0.04) {
+        if (notes[j].midi > best.midi) best = notes[j];
+        j++;
+      }
+      mono.push(best);
+      i = j;
+    }
+    if (mode === 'mono') return mono;
+
+    const minGapSec = (mode === 'super') ? 0.22 : 0.14;
+    const minDurSec = (mode === 'super') ? 0.12 : 0.075;
+    const thinned = [];
+    for (const n of mono) {
+      if (thinned.length === 0) { thinned.push(n); continue; }
+      const prev = thinned[thinned.length - 1];
+      if ((n.time - prev.time) < minGapSec) {
+        if (prev.duration < minDurSec && n.duration > prev.duration * 1.4) thinned[thinned.length - 1] = n;
+        continue;
+      }
+      thinned.push(n);
+    }
+    return thinned;
+  }
+
+  function formatNoteText(note) {
+    if (state.notationMode === 'num') return note.numLabel;
+    if (state.notationMode === 'note') return note.name.replace('#', '♯');
+    if (state.notationMode === 'kana') return note.kanaLabel;
+    return `${note.numLabel} (${note.name.replace('#', '♯')})`;
+  }
+
+  function renderScoreRibbon() {
+    els.scoreRibbon.innerHTML = '';
+    const frag = document.createDocumentFragment();
+    const loopEndIdx = Math.min(state.melodyNotes.length - 1, state.loopStartIdx + state.loopCount - 1);
+
+    state.melodyNotes.forEach((n, idx) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.id = `ribbon-note-${idx}`;
+      const tierCls = n.tine ? `tier-${n.tine.tier}` : 'out-range';
+      const loopCls = (state.loopEnabled && idx >= state.loopStartIdx && idx <= loopEndIdx) ? ' in-loop' : '';
+      btn.className = `note-chip ${tierCls}${loopCls}`;
+      btn.textContent = (state.notationMode === 'both') ? n.numLabel : formatNoteText(n);
+      btn.title = `${idx + 1}音目: ${n.numLabel} / ${n.name} (${n.kanaLabel})`;
+      btn.addEventListener('click', () => jumpToNote(idx));
+      frag.appendChild(btn);
+    });
+    els.scoreRibbon.appendChild(frag);
+  }
+
+  function updateRibbonLoopStyles() {
+    const loopEndIdx = Math.min(state.melodyNotes.length - 1, state.loopStartIdx + state.loopCount - 1);
+    for (let i = 0; i < state.melodyNotes.length; i++) {
+      const el = document.getElementById(`ribbon-note-${i}`);
+      if (!el) continue;
+      el.classList.toggle('in-loop', state.loopEnabled && i >= state.loopStartIdx && i <= loopEndIdx);
+    }
+  }
+
+  function formatSec(sec) {
+    const s = Math.max(0, Math.floor(sec));
+    return `${Math.floor(s / 60)}:${(s % 60) < 10 ? '0' : ''}${s % 60}`;
+  }
+
+  function updateDisplayForIndex(idx, scrollRibbon = true) {
+    const notes = state.melodyNotes;
+    tineDomMap.forEach(btn => btn.classList.remove('is-active', 'is-next'));
+    const prevCurrent = els.scoreRibbon.querySelector('.note-chip.current');
+    if (prevCurrent) prevCurrent.classList.remove('current');
+
+    if (!notes.length || idx < 0 || idx >= notes.length) {
+      els.hudNowPill.textContent = '--';
+      els.hudNextPill.textContent = '--';
+      els.hudProgress.textContent = '0 / 0 音';
+      return;
+    }
+
+    const cur = notes[idx];
+    const next = (idx + 1 < notes.length) ? notes[idx + 1] : null;
+
+    const chip = document.getElementById(`ribbon-note-${idx}`);
+    if (chip) {
+      chip.classList.add('current');
+      if (scrollRibbon) chip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    }
+
+    if (cur.tine) {
+      const curBtn = tineDomMap.get(cur.tine.id);
+      if (curBtn) {
+        curBtn.classList.remove('is-active');
+        void curBtn.offsetWidth;
+        curBtn.classList.add('is-active');
+      }
+    }
+
+    if (next && next.tine && (!cur.tine || next.tine.id !== cur.tine.id)) {
+      const nextBtn = tineDomMap.get(next.tine.id);
+      if (nextBtn) nextBtn.classList.add('is-next');
+    }
+
+    const primaryNow = state.notationMode === 'note' ? cur.name.replace('#', '♯')
+      : state.notationMode === 'kana' ? cur.kanaLabel : cur.numLabel;
+    els.hudNowPill.textContent = primaryNow;
+    els.hudNowPill.className = 'hud-note-pill ' + (cur.tine ? `tier-${cur.tine.tier}` : 'out-range');
+
+    if (cur.tine) {
+      const partTag = cur.sourceTrack ? `<span class="badge" style="background:#f3e8ff;color:#6b21a8;">${cur.sourceTrack}</span>` : '';
+      els.hudNowBadges.innerHTML =
+        `<span class="badge badge-${cur.tine.tier}">${getTierLabel(cur.tine.tier)}</span>` +
+        `<span class="badge badge-thumb">${getThumbLabel(cur.tine.thumb)}</span>` +
+        partTag;
+      els.hudNowSub.textContent = `刻印: ${cur.numLabel} ／ 音名: ${cur.name.replace('#', '♯')} ／ ${cur.kanaLabel}`;
+    } else {
+      els.hudNowBadges.innerHTML = `<span class="badge badge-warn">⚠ 41音音域外 (F3〜F6外)</span>`;
+      els.hudNowSub.textContent = `音名: ${cur.name.replace('#', '♯')} — オクターブ調整をおすすめします`;
+    }
+
+    if (next) {
+      els.hudNextPill.textContent = state.notationMode === 'note' ? next.name.replace('#', '♯') : next.numLabel;
+      els.hudNextSub.textContent = next.tine
+        ? `${next.name.replace('#', '♯')} (${next.kanaLabel}) · ${getTierLabel(next.tine.tier)} · ${getThumbLabel(next.tine.thumb)}`
+        : `${next.name.replace('#', '♯')} (音域外)`;
+    } else {
+      els.hudNextPill.textContent = '終';
+      els.hudNextSub.textContent = '最後の音です！';
+    }
+
+    els.hudProgress.textContent = `${idx + 1} / ${notes.length} 音`;
+    const totalDur = state.midi ? state.midi.duration : (notes[notes.length - 1].time + 1);
+    els.hudTime.textContent = `${formatSec(cur.time)} / ${formatSec(totalDur)}`;
+  }
+
+  function jumpToNote(idx) {
+    if (!state.melodyNotes.length) return;
+    const clamped = Math.max(0, Math.min(state.melodyNotes.length - 1, idx));
+    stopCountdown();
+    state.currentNoteIdx = clamped;
+    state.loopStartIdx = clamped;
+    state.songTime = state.melodyNotes[clamped].time;
+    syncScheduleIndices(state.songTime);
+    updateRibbonLoopStyles();
+    updateDisplayForIndex(clamped);
+    if (!state.isPlaying) playKalimbaNote(state.melodyNotes[clamped].midi, 0, 0.75, Math.max(0.5, state.melodyVol));
+  }
+
+  function getLoopBoundsSec() {
+    if (!state.loopEnabled || !state.melodyNotes.length) return null;
+    const startIdx = Math.max(0, Math.min(state.melodyNotes.length - 1, state.loopStartIdx));
+    const endIdx = Math.min(state.melodyNotes.length - 1, startIdx + state.loopCount - 1);
+    const startSec = state.melodyNotes[startIdx].time;
+    const endNote = state.melodyNotes[endIdx];
+    return { startIdx, endIdx, startSec, endSec: endNote.time + Math.max(0.45, endNote.duration) };
+  }
+
+  function syncScheduleIndices(fromSongSec) {
+    let mIdx = 0;
+    while (mIdx < state.melodyNotes.length && state.melodyNotes[mIdx].time < fromSongSec - 0.01) mIdx++;
+    state.nextMelodyScheduleIdx = mIdx;
+
+    let bIdx = 0;
+    while (bIdx < state.backingNotes.length && state.backingNotes[bIdx].time < fromSongSec - 0.01) bIdx++;
+    state.nextBackingScheduleIdx = bIdx;
+  }
+
+  function startPlaybackNow() {
+    if (!state.melodyNotes.length) return;
+    ensureAudioContext();
+    stopPreview();
+    stopSweep41();
+
+    const loop = getLoopBoundsSec();
+    if (loop && (state.songTime < loop.startSec || state.songTime >= loop.endSec)) {
+      state.songTime = loop.startSec;
+      state.currentNoteIdx = loop.startIdx;
+    }
+
+    syncScheduleIndices(state.songTime);
+    state.isPlaying = true;
+    state.lastFramePerf = performance.now();
+    els.playBtn.textContent = '⏸ 一時停止';
+    els.playBtn.classList.remove('btn-primary');
+    els.playBtn.classList.add('btn-danger');
+    if (els.demoPlayBtn) {
+      els.demoPlayBtn.textContent = '⏹ デモ停止';
+      els.demoPlayBtn.classList.remove('btn-amber');
+      els.demoPlayBtn.classList.add('btn-danger');
+    }
+    if (state.appMode === 'demo') {
+      const styleText = state.demoStyle === 'solo' ? 'カリンバ単体ソロ' : '伴奏BGMあり';
+      els.statusBar.textContent = `✨ カリンバ実演デモ再生中（${styleText} · ${state.speedPercent}%）— 音色や仕上がりをご確認ください！`;
+    } else {
+      els.statusBar.textContent = state.loopEnabled
+        ? `🔁 部分ループ再生中（${state.speedPercent}% スピード）`
+        : `🎵 再生中（${state.speedPercent}% スピード）— 光るキーを親指で追って弾いてみましょう！`;
+    }
+
+    if (state.schedulerTimer) clearInterval(state.schedulerTimer);
+    state.schedulerTimer = setInterval(scheduleAudioTick, 35);
+    scheduleAudioTick();
+  }
+
+  function scheduleAudioTick() {
+    if (!state.isPlaying) return;
+    const ctx = ensureAudioContext();
+    const rate = state.speedPercent / 100;
+    const windowEndSong = state.songTime + 0.14 * rate;
+    const loop = getLoopBoundsSec();
+    const effectiveEnd = loop ? Math.min(windowEndSong, loop.endSec) : windowEndSong;
+
+    const melVol = (state.appMode === 'demo') ? 0.95 : state.melodyVol;
+    const bgVol = (state.appMode === 'demo')
+      ? (state.demoStyle === 'band' ? Math.max(0.35, state.backingVol) : 0)
+      : state.backingVol;
+
+    while (state.nextMelodyScheduleIdx < state.melodyNotes.length) {
+      const n = state.melodyNotes[state.nextMelodyScheduleIdx];
+      if (n.time > effectiveEnd) break;
+      playKalimbaNote(n.midi, ctx.currentTime + Math.max(0, (n.time - state.songTime) / rate), n.velocity, melVol);
+      state.nextMelodyScheduleIdx++;
+    }
+
+    while (state.nextBackingScheduleIdx < state.backingNotes.length) {
+      const bn = state.backingNotes[state.nextBackingScheduleIdx];
+      if (bn.time > effectiveEnd) break;
+      if (bgVol > 0.001) {
+        playBackingNote(bn.midi, ctx.currentTime + Math.max(0, (bn.time - state.songTime) / rate), bn.duration / rate, bn.velocity, bgVol);
+      }
+      state.nextBackingScheduleIdx++;
+    }
+  }
+
+  function stopCountdown() {
+    if (state.countdownTimer) { clearInterval(state.countdownTimer); state.countdownTimer = null; }
+    state.isCountingDown = false;
+  }
+
+  function stopPlayback() {
+    stopCountdown();
+    state.isPlaying = false;
+    if (state.schedulerTimer) { clearInterval(state.schedulerTimer); state.schedulerTimer = null; }
+    els.playBtn.textContent = '▶ 再生';
+    els.playBtn.classList.remove('btn-danger');
+    els.playBtn.classList.add('btn-primary');
+    if (els.demoPlayBtn) {
+      els.demoPlayBtn.textContent = '▶ 実演デモを再生';
+      els.demoPlayBtn.classList.remove('btn-danger');
+      els.demoPlayBtn.classList.add('btn-amber');
+    }
+  }
+
+  function togglePlay() {
+    if (!state.melodyNotes.length) return;
+    if (state.practiceMode === 'wait') {
+      els.statusBar.textContent = '🛑 待ち受けモード中です。「🎤 チューナー」を起動して実機を弾くか、「次 ▶」で1音ずつ進めます。';
+      return;
+    }
+    if (state.isPlaying || state.isCountingDown) {
+      stopPlayback();
+      els.statusBar.textContent = '⏸ 一時停止中';
+      return;
+    }
+
+    ensureAudioContext();
+    if (els.countdownCheck.checked) {
+      let count = 3;
+      state.isCountingDown = true;
+      els.playBtn.textContent = `⏳ ${count}...`;
+      els.statusBar.textContent = `⏳ カリンバを両手で構えて… 再生まで ${count}`;
+      playKalimbaNote(76, 0, 0.35, 0.45);
+      state.countdownTimer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          els.playBtn.textContent = `⏳ ${count}...`;
+          els.statusBar.textContent = `⏳ カリンバを両手で構えて… 再生まで ${count}`;
+          playKalimbaNote(76, 0, 0.35, 0.45);
+        } else {
+          stopCountdown();
+          playKalimbaNote(84, 0, 0.45, 0.5);
+          startPlaybackNow();
+        }
+      }, 850);
+    } else {
+      startPlaybackNow();
+    }
+  }
+
+  function resetSong() {
+    stopPlayback();
+    stopPreview();
+    state.currentNoteIdx = state.loopEnabled ? state.loopStartIdx : 0;
+    state.songTime = state.melodyNotes[state.currentNoteIdx]?.time || 0;
+    syncScheduleIndices(state.songTime);
+    updateDisplayForIndex(state.currentNoteIdx);
+    els.statusBar.textContent = '⏮ 先頭へ戻しました。';
+  }
+
+  function startSoloPreview() {
+    if (!state.melodyNotes.length) return;
+    if (state.isPreviewing) { stopPreview(); return; }
+    stopPlayback();
+    const ctx = ensureAudioContext();
+    state.isPreviewing = true;
+    els.soloBtn.textContent = '⏹ 停止';
+    els.soloBtn.classList.remove('btn-amber');
+    els.soloBtn.classList.add('btn-danger');
+    els.statusBar.textContent = '🔊 選択中トラックの先頭6秒を試聴中…';
+
+    const firstTime = state.melodyNotes[0].time;
+    const baseNow = ctx.currentTime + 0.05;
+    state.melodyNotes.forEach(n => {
+      const rel = n.time - firstTime;
+      if (rel >= 0 && rel < 6.0) playKalimbaNote(n.midi, baseNow + rel, n.velocity, 0.85);
+    });
+    state.previewStopTimer = setTimeout(() => { if (state.isPreviewing) stopPreview(); }, 6200);
+  }
+
+  function stopPreview() {
+    if (state.previewStopTimer) { clearTimeout(state.previewStopTimer); state.previewStopTimer = null; }
+    state.isPreviewing = false;
+    els.soloBtn.textContent = '🔊 試聴';
+    els.soloBtn.classList.remove('btn-danger');
+    els.soloBtn.classList.add('btn-amber');
+  }
+
+  const wfCanvas = els.waterfallCanvas;
+  const wfCtx = wfCanvas.getContext('2d');
+  const WATERFALL_WINDOW_SEC = 3.2;
+
+  function resizeWaterfallCanvas() {
+    const rect = wfCanvas.getBoundingClientRect();
+    if (rect.width <= 0) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = Math.round(rect.width * dpr);
+    const h = Math.round(rect.height * dpr);
+    if (wfCanvas.width !== w || wfCanvas.height !== h) { wfCanvas.width = w; wfCanvas.height = h; }
+  }
+
+  function drawRoundedRect(ctx, x, y, w, h, r) {
+    const rad = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + rad, y);
+    ctx.arcTo(x + w, y, x + w, y + h, rad);
+    ctx.arcTo(x + w, y + h, x, y + h, rad);
+    ctx.arcTo(x, y + h, x, y, rad);
+    ctx.arcTo(x, y, x + w, y, rad);
+    ctx.closePath();
+  }
+
+  function mainAnimationLoop(nowPerf) {
+    if (state.isPlaying && state.melodyNotes.length) {
+      const dtReal = Math.min(0.1, (nowPerf - state.lastFramePerf) / 1000);
+      state.lastFramePerf = nowPerf;
+      state.songTime += dtReal * (state.speedPercent / 100);
+
+      const loop = getLoopBoundsSec();
+      const songEnd = state.midi ? state.midi.duration + 0.6 : (state.melodyNotes[state.melodyNotes.length - 1].time + 1.0);
+
+      if (loop && state.songTime >= loop.endSec) {
+        state.songTime = loop.startSec;
+        syncScheduleIndices(state.songTime);
+      } else if (!loop && state.songTime >= songEnd) {
+        stopPlayback();
+        els.statusBar.textContent = '🎉 演奏終了！お疲れさまでした。もう一度弾くには「▶ 再生」を押してください。';
+      }
+
+      let activeIdx = 0;
+      for (let i = 0; i < state.melodyNotes.length; i++) {
+        if (state.melodyNotes[i].time <= state.songTime + 0.02) activeIdx = i;
+        else break;
+      }
+      if (activeIdx !== state.currentNoteIdx) {
+        state.currentNoteIdx = activeIdx;
+        updateDisplayForIndex(activeIdx);
+      }
+      els.hudTime.textContent = `${formatSec(state.songTime)} / ${formatSec(state.midi ? state.midi.duration : songEnd)}`;
+    } else {
+      state.lastFramePerf = nowPerf;
+    }
+
+    if (state.showWaterfall) {
+      resizeWaterfallCanvas();
+      const W = wfCanvas.width, H = wfCanvas.height;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const padX = 8 * dpr;
+      const usableW = W - padX * 2;
+      const laneW = usableW / 17;
+      const hitY = H - 14 * dpr;
+      const pxPerSec = (hitY - 22 * dpr) / WATERFALL_WINDOW_SEC;
+
+      wfCtx.clearRect(0, 0, W, H);
+
+      for (let col = 0; col < 17; col++) {
+        const lx = padX + col * laneW;
+        if (col === 8) {
+          wfCtx.fillStyle = 'rgba(254, 243, 199, 0.09)';
+          wfCtx.fillRect(lx, 0, laneW, H);
+        } else if (col % 2 === 0) {
+          wfCtx.fillStyle = 'rgba(255, 255, 255, 0.025)';
+          wfCtx.fillRect(lx, 0, laneW, H);
+        }
+        wfCtx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+        wfCtx.lineWidth = 1;
+        wfCtx.beginPath(); wfCtx.moveTo(lx, 0); wfCtx.lineTo(lx, H); wfCtx.stroke();
+      }
+
+      const visualTime = (state.practiceMode === 'wait') ? (state.melodyNotes[state.currentNoteIdx]?.time || 0) : state.songTime;
+      const secStep = state.midi ? (60 / state.midi.bpm) : 0.6;
+      const firstBeatSec = Math.floor(visualTime / secStep) * secStep;
+      wfCtx.strokeStyle = 'rgba(255, 255, 255, 0.07)';
+      wfCtx.lineWidth = 1;
+      for (let t = firstBeatSec; t < visualTime + WATERFALL_WINDOW_SEC + secStep; t += secStep) {
+        const y = hitY - (t - visualTime) * pxPerSec;
+        if (y < 0 || y > hitY) continue;
+        wfCtx.beginPath(); wfCtx.moveTo(padX, y); wfCtx.lineTo(W - padX, y); wfCtx.stroke();
+      }
+
+      const loop = getLoopBoundsSec();
+      if (loop && state.practiceMode === 'auto') {
+        const yStart = hitY - (loop.startSec - visualTime) * pxPerSec;
+        const yEnd = hitY - (loop.endSec - visualTime) * pxPerSec;
+        wfCtx.fillStyle = 'rgba(16, 185, 129, 0.12)';
+        wfCtx.fillRect(padX, Math.max(0, yEnd), usableW, Math.max(0, Math.min(hitY, yStart) - Math.max(0, yEnd)));
+      }
+
+      wfCtx.strokeStyle = 'rgba(245, 158, 11, 0.78)';
+      wfCtx.lineWidth = 2.5 * dpr;
+      wfCtx.beginPath(); wfCtx.moveTo(padX, hitY); wfCtx.lineTo(W - padX, hitY); wfCtx.stroke();
+
+      const tierColors = {
+        top: { fill: '#0284c7', border: '#bae6fd', prefix: '▲' },
+        mid: { fill: '#d97706', border: '#fef3c7', prefix: '' },
+        low: { fill: '#059669', border: '#a7f3d0', prefix: '▼' }
+      };
+
+      const notes = state.melodyNotes;
+      for (let i = 0; i < notes.length; i++) {
+        const n = notes[i];
+        const dt = n.time - visualTime;
+        if (dt + n.duration < -0.25 || dt > WATERFALL_WINDOW_SEC + 0.2 || !n.tine) continue;
+
+        const col = n.tine.col;
+        const lx = padX + col * laneW + 2 * dpr;
+        const pillW = Math.max(10 * dpr, laneW - 4 * dpr);
+        const yBottom = hitY - dt * pxPerSec;
+        const pillH = Math.max(22 * dpr, Math.min(90 * dpr, n.duration * pxPerSec * 0.82));
+        const yTop = yBottom - pillH;
+        const isCurrent = (i === state.currentNoteIdx) && (Math.abs(dt) < 0.25 || state.practiceMode === 'wait');
+        const colStyle = tierColors[n.tine.tier];
+
+        wfCtx.save();
+        drawRoundedRect(wfCtx, lx, yTop, pillW, pillH, 6 * dpr);
+        wfCtx.fillStyle = isCurrent ? '#e11d48' : colStyle.fill;
+        wfCtx.globalAlpha = dt < -0.05 ? 0.38 : 0.94;
+        wfCtx.fill();
+        wfCtx.lineWidth = (isCurrent ? 2.2 : 1.2) * dpr;
+        wfCtx.strokeStyle = isCurrent ? '#ffffff' : colStyle.border;
+        wfCtx.stroke();
+
+        const shortLabel = state.notationMode === 'note' ? n.name.replace('#', '♯')
+          : state.notationMode === 'kana' ? n.kanaLabel : n.numLabel;
+        wfCtx.fillStyle = '#ffffff';
+        wfCtx.font = `800 ${Math.round(Math.min(11.5, Math.max(8, (laneW / dpr) * 0.25)) * dpr)}px -apple-system, sans-serif`;
+        wfCtx.textAlign = 'center';
+        wfCtx.textBaseline = 'middle';
+        wfCtx.fillText(colStyle.prefix + shortLabel, lx + pillW / 2, yBottom - Math.min(11 * dpr, pillH / 2));
+        wfCtx.restore();
+      }
+    }
+
+    requestAnimationFrame(mainAnimationLoop);
+  }
+
+  wfCanvas.addEventListener('click', (e) => {
+    if (!state.melodyNotes.length) return;
+    const rect = wfCanvas.getBoundingClientRect();
+    const clickY = e.clientY - rect.top;
+    const hitYCss = rect.height - 14;
+    const pxPerSecCss = (hitYCss - 22) / WATERFALL_WINDOW_SEC;
+    const visualTime = (state.practiceMode === 'wait') ? (state.melodyNotes[state.currentNoteIdx]?.time || 0) : state.songTime;
+    const targetSec = visualTime + (hitYCss - clickY) / pxPerSecCss;
+
+    let closest = 0, minDiff = Infinity;
+    state.melodyNotes.forEach((n, idx) => {
+      const d = Math.abs(n.time - targetSec);
+      if (d < minDiff) { minDiff = d; closest = idx; }
+    });
+    jumpToNote(closest);
+  });
+
+  function autoCorrelatePitch(buf, sampleRate) {
+    const SIZE = buf.length;
+    let rms = 0;
+    for (let i = 0; i < SIZE; i++) rms += buf[i] * buf[i];
+    if (Math.sqrt(rms / SIZE) < 0.018) return -1;
+
+    let r1 = 0, r2 = SIZE - 1;
+    for (let i = 0; i < SIZE / 2; i++) { if (Math.abs(buf[i]) < 0.2) { r1 = i; break; } }
+    for (let i = 1; i < SIZE / 2; i++) { if (Math.abs(buf[SIZE - i]) < 0.2) { r2 = SIZE - i; break; } }
+    const sliced = buf.slice(r1, r2);
+    const len = sliced.length;
+    if (len < 64) return -1;
+
+    const c = new Float32Array(len);
+    for (let i = 0; i < len; i++) {
+      let sum = 0;
+      for (let j = 0; j < len - i; j++) sum += sliced[j] * sliced[j + i];
+      c[i] = sum;
+    }
+
+    let d = 0;
+    while (d + 1 < len && c[d] > c[d + 1]) d++;
+    let maxVal = -1, maxPos = -1;
+    for (let i = d; i < len; i++) { if (c[i] > maxVal) { maxVal = c[i]; maxPos = i; } }
+    if (maxPos <= 0 || maxPos >= len - 1) return -1;
+
+    const x1 = c[maxPos - 1], x2 = c[maxPos], x3 = c[maxPos + 1];
+    const a = (x1 + x3 - 2 * x2) / 2;
+    const b = (x3 - x1) / 2;
+    const T0 = a ? maxPos - b / (2 * a) : maxPos;
+    const freq = sampleRate / T0;
+    return (freq >= 150 && freq <= 1600) ? freq : -1;
+  }
+
+  async function startTuner(keepBarHidden = false) {
+    if (state.tunerActive) {
+      if (!keepBarHidden) els.tunerBar.classList.toggle('open');
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+      const AC = window.AudioContext || window.webkitAudioContext;
+      state.tunerCtx = new AC();
+      state.tunerStream = stream;
+      state.tunerAnalyser = state.tunerCtx.createAnalyser();
+      state.tunerAnalyser.fftSize = 4096;
+      state.tunerCtx.createMediaStreamSource(stream).connect(state.tunerAnalyser);
+      state.tunerBuf = new Float32Array(state.tunerAnalyser.fftSize);
+      state.tunerActive = true;
+      state.tuneSmoothedFreq = 0;
+      state.tuneLastHeardMs = 0;
+      state.tuneSimCents = null;
+      updateTuneSimButtonsUI();
+      if (!keepBarHidden && state.appMode !== 'tune') els.tunerBar.classList.add('open');
+      els.tunerBtn.textContent = '🎤 チューナー稼働中';
+      if (els.tuneMicBtn) {
+        els.tuneMicBtn.textContent = '🎤 マイク稼働中（停止）';
+        els.tuneMicBtn.classList.remove('btn-accent');
+        els.tuneMicBtn.classList.add('btn-danger');
+      }
+      if (state.appMode === 'tune') {
+        renderTuneStudioReading(0, 'idle');
+      }
+      runTunerLoop();
+    } catch (_) {
+      els.statusBar.textContent = '⚠ マイクの許可が必要です（ブラウザ設定をご確認ください）';
+      if (state.appMode === 'tune') {
+        els.tuneGuidance.textContent = '⚠ マイクへのアクセスが許可されていません。「🔊 お手本音」で耳合わせ調律や右の「お試し確認」は使えます。';
+      }
+    }
+  }
+
+  function stopTuner() {
+    state.tunerActive = false;
+    state.tuneStableStartMs = 0;
+    state.tuneSmoothedFreq = 0;
+    state.tuneLastHeardMs = 0;
+    if (state.tunerStream) { state.tunerStream.getTracks().forEach(t => t.stop()); state.tunerStream = null; }
+    if (state.tunerCtx) { state.tunerCtx.close(); state.tunerCtx = null; }
+    tineDomMap.forEach(btn => btn.classList.remove('is-tuned'));
+    els.tunerBar.classList.remove('open');
+    els.tunerBtn.textContent = '🎤 チューナー / 調律';
+    if (els.tuneMicBtn) {
+      els.tuneMicBtn.textContent = '🎤 マイクを起動';
+      els.tuneMicBtn.classList.remove('btn-danger');
+      els.tuneMicBtn.classList.add('btn-accent');
+    }
+    if (state.appMode === 'tune' && state.tuneSimCents === null) {
+      renderTuneStudioReading(0, 'idle');
+    }
+  }
+
+  function updateTuneSimButtonsUI() {
+    if (!els.tuneSimBtns) return;
+    els.tuneSimBtns.querySelectorAll('.tune-sim-btn').forEach(btn => {
+      const val = btn.dataset.tunesim;
+      const isAct = (state.tuneSimCents !== null && val !== 'clear' && Number(val) === state.tuneSimCents);
+      btn.classList.toggle('active', isAct);
+    });
+  }
+
+  function setTuneSvgOverlay(mode) {
+    els.tuneSvgIdleOverlay.classList.toggle('active', mode === 'idle');
+    els.tuneSvgHighOverlay.classList.toggle('active', mode === 'high');
+    els.tuneSvgLowOverlay.classList.toggle('active', mode === 'low');
+    els.tuneSvgOkOverlay.classList.toggle('active', mode === 'ok');
+
+    if (mode === 'high') {
+      els.tuneSvgTineGroup.style.transform = 'translateY(5px)';
+      els.tuneSvgTineBody.setAttribute('stroke', '#fb923c');
+    } else if (mode === 'low') {
+      els.tuneSvgTineGroup.style.transform = 'translateY(-5px)';
+      els.tuneSvgTineBody.setAttribute('stroke', '#38bdf8');
+    } else if (mode === 'ok') {
+      els.tuneSvgTineGroup.style.transform = 'translateY(0px)';
+      els.tuneSvgTineBody.setAttribute('stroke', '#34d399');
+    } else {
+      els.tuneSvgTineGroup.style.transform = 'translateY(0px)';
+      els.tuneSvgTineBody.setAttribute('stroke', '#fef3c7');
+    }
+  }
+
+  function renderTuneStudioReading(measuredFreq, statusMode = 'idle') {
+    if (!state.tuneOrder.length) return;
+    const targetTine = state.tuneOrder[state.tuneIdx];
+    const targetFreq = midiToFreq(targetTine.midi);
+    const targetNoteDisp = targetTine.noteName.replace('#', '♯');
+
+    els.tuneCmpTargetNote.textContent = `${targetNoteDisp} (${targetTine.kanaLabel})`;
+    els.tuneCmpTargetHz.textContent = `${targetFreq.toFixed(1)} Hz`;
+    els.tuneSvgTineLabel.textContent = targetTine.numLabel;
+
+    if (statusMode === 'idle' || !measuredFreq || measuredFreq <= 0) {
+      els.tuneCmpDiffCard.className = 'tune-readout-card is-diff';
+      els.tuneCmpDiffMain.className = 'tune-card-main';
+      els.tuneCmpDiffMain.textContent = '--';
+      els.tuneCmpDiffSub.textContent = state.tunerActive ? '音を待機中…' : 'マイク未起動';
+      els.tuneLiveDot.className = 'tune-live-dot';
+      els.tuneLiveStatusText.textContent = 'いま鳴った音';
+      els.tuneCmpNowNote.textContent = '--';
+      els.tuneCmpNowHz.textContent = '-- Hz';
+      els.tuneNeedle.style.left = '50%';
+      els.tuneNeedle.style.background = '#e5e7eb';
+      els.tuneMeterFill.style.left = '50%';
+      els.tuneMeterFill.style.width = '0%';
+      els.tuneDiagramBadge.className = 'tune-diagram-badge';
+      els.tuneDiagramBadge.textContent = '待機中';
+      setTuneSvgOverlay('idle');
+      els.tuneGuidance.className = 'tune-guidance';
+      els.tuneGuidance.textContent = state.tunerActive
+        ? `🎤 計測待機中… 下のボードで光っている「${targetTine.numLabel} (${targetNoteDisp})」を実機で1回ポンと弾いてください`
+        : '「🎤 マイクを起動」を押して光るキーを弾くか、右下の「動きをお試し確認」で叩き方をチェックできます';
+      return null;
+    }
+
+    const diffCents = Math.round(1200 * Math.log2(measuredFreq / targetFreq));
+    const diffHz = measuredFreq - targetFreq;
+    const noteFloat = 12 * (Math.log(measuredFreq / 440) / Math.log(2)) + 69;
+    const detMidi = Math.round(noteFloat);
+    const detName = midiToNoteName(detMidi).replace('#', '♯');
+    const detKana = midiToKana(detMidi);
+
+    // Measured pitch card
+    els.tuneLiveDot.className = `tune-live-dot ${statusMode}`;
+    els.tuneLiveStatusText.textContent = statusMode === 'sim'
+      ? 'お試し表示'
+      : statusMode === 'hold' ? '直前の結果' : '計測中';
+    els.tuneCmpNowNote.textContent = `${detName} (${detKana})`;
+    els.tuneCmpNowHz.textContent = `${measuredFreq.toFixed(1)} Hz (${diffHz >= 0 ? '+' : ''}${diffHz.toFixed(1)})`;
+
+    // Meter needle + directional center-out fill bar (-100c..+100c)
+    const clampedNeedle = Math.max(3, Math.min(97, 50 + (diffCents / 100) * 47));
+    els.tuneNeedle.style.left = `${clampedNeedle}%`;
+    if (clampedNeedle >= 50) {
+      els.tuneMeterFill.style.left = '50%';
+      els.tuneMeterFill.style.width = `${clampedNeedle - 50}%`;
+    } else {
+      els.tuneMeterFill.style.left = `${clampedNeedle}%`;
+      els.tuneMeterFill.style.width = `${50 - clampedNeedle}%`;
+    }
+
+    const absDiff = Math.abs(diffCents);
+    const simPrefix = statusMode === 'sim' ? '【お試し】' : '';
+    let tapStrength = '軽く2〜3回トントン';
+    if (absDiff <= 15) tapStrength = 'ごく軽く1回コン';
+    else if (absDiff <= 40) tapStrength = '軽く2〜3回トントン';
+    else if (absDiff <= 90) tapStrength = '少しずつ確認しながら';
+    else tapStrength = 'キー位置確認→少しずつ';
+
+    if (absDiff <= 6) {
+      els.tuneCmpDiffCard.className = 'tune-readout-card is-diff ok';
+      els.tuneCmpDiffMain.className = 'tune-card-main ok';
+      els.tuneCmpDiffMain.textContent = `±${absDiff} cent`;
+      els.tuneCmpDiffSub.textContent = 'ぴったり！（OK）';
+      els.tuneNeedle.style.background = '#34d399';
+      els.tuneMeterFill.style.background = 'rgba(52, 211, 153, 0.75)';
+      els.tuneDiagramBadge.className = 'tune-diagram-badge ok';
+      els.tuneDiagramBadge.textContent = '✅ そのままOK';
+      setTuneSvgOverlay('ok');
+      els.tuneGuidance.className = 'tune-guidance ok';
+      els.tuneGuidance.textContent = `${simPrefix}✅ ぴったり合っています！（${diffCents >= 0 ? '+' : ''}${diffCents} cent · ${measuredFreq.toFixed(1)} Hz）ハンマー不要です`;
+    } else if (diffCents > 0) {
+      const desc = absDiff <= 15
+        ? 'ごくわずか高い'
+        : absDiff <= 45
+          ? `少し高い（半音の約${absDiff}%）`
+          : `大きく高い（約${(absDiff / 100).toFixed(1)}半音）`;
+      els.tuneCmpDiffCard.className = 'tune-readout-card is-diff high';
+      els.tuneCmpDiffMain.className = 'tune-card-main high';
+      els.tuneCmpDiffMain.textContent = `+${diffCents} cent`;
+      els.tuneCmpDiffSub.textContent = desc;
+      els.tuneNeedle.style.background = '#fb923c';
+      els.tuneMeterFill.style.background = 'rgba(251, 146, 60, 0.7)';
+      els.tuneDiagramBadge.className = 'tune-diagram-badge high';
+      els.tuneDiagramBadge.textContent = `⬇ 下へ動かす (+${diffCents}c)`;
+      els.tuneSvgHighStrength.textContent = `目安：${tapStrength}`;
+      setTuneSvgOverlay('high');
+      const wrongHint = absDiff > 140 ? ` ※別のキー(${detName})かも？` : '';
+      els.tuneGuidance.className = 'tune-guidance high';
+      els.tuneGuidance.textContent = `${simPrefix}⬇ 目標より +${diffCents} cent 高い → ハンマーで【上端（根元）】を下へ（${tapStrength}）${wrongHint}`;
+    } else {
+      const desc = absDiff <= 15
+        ? 'ごくわずか低い'
+        : absDiff <= 45
+          ? `少し低い（半音の約${absDiff}%）`
+          : `大きく低い（約${(absDiff / 100).toFixed(1)}半音）`;
+      els.tuneCmpDiffCard.className = 'tune-readout-card is-diff low';
+      els.tuneCmpDiffMain.className = 'tune-card-main low';
+      els.tuneCmpDiffMain.textContent = `${diffCents} cent`;
+      els.tuneCmpDiffSub.textContent = desc;
+      els.tuneNeedle.style.background = '#38bdf8';
+      els.tuneMeterFill.style.background = 'rgba(56, 189, 248, 0.7)';
+      els.tuneDiagramBadge.className = 'tune-diagram-badge low';
+      els.tuneDiagramBadge.textContent = `⬆ 上へ動かす (${diffCents}c)`;
+      els.tuneSvgLowStrength.textContent = `目安：${tapStrength}`;
+      setTuneSvgOverlay('low');
+      const wrongHint = absDiff > 140 ? ` ※別のキー(${detName})かも？` : '';
+      els.tuneGuidance.className = 'tune-guidance low';
+      els.tuneGuidance.textContent = `${simPrefix}⬆ 目標より ${diffCents} cent 低い → ハンマーで【先端（下側）】を上へ（${tapStrength}）${wrongHint}`;
+    }
+
+    return diffCents;
+  }
+
+  function runTunerLoop() {
+    if (!state.tunerActive || !state.tunerAnalyser) return;
+    state.tunerAnalyser.getFloatTimeDomainData(state.tunerBuf);
+    const freq = autoCorrelatePitch(state.tunerBuf, state.tunerCtx.sampleRate);
+
+    if (freq > 0) {
+      const noteFloat = 12 * (Math.log(freq / 440) / Math.log(2)) + 69;
+      const midi = Math.round(noteFloat);
+      const cents = Math.round((noteFloat - midi) * 100);
+      const name = midiToNoteName(midi).replace('#', '♯');
+      const num = midiToNumberNotation(midi);
+
+      // 1) Update compact top chromatic tuner bar (physically accurate hammer direction!)
+      els.tunerNote.textContent = name;
+      const absC = Math.abs(cents);
+      if (absC <= 6) {
+        els.tunerCents.textContent = `±${absC} cent (ぴったり！)`;
+        els.tunerNote.style.color = '#34d399';
+        els.tunerPointer.style.background = '#34d399';
+      } else if (cents > 0) {
+        els.tunerCents.textContent = `+${cents} cent (高い → 上端を下に叩く)`;
+        els.tunerNote.style.color = '#fbbf24';
+        els.tunerPointer.style.background = '#f59e0b';
+      } else {
+        els.tunerCents.textContent = `${cents} cent (低い → 先端を上に叩く)`;
+        els.tunerNote.style.color = '#38bdf8';
+        els.tunerPointer.style.background = '#38bdf8';
+      }
+      els.tunerPointer.style.left = `${Math.max(4, Math.min(96, 50 + cents * 0.9))}%`;
+
+      tineDomMap.forEach(btn => btn.classList.remove('is-tuned'));
+      const tine = getTineForMidi(midi);
+      if (tine) {
+        els.tunerKalimbaPos.textContent = `刻印 ${num} ／ ${getTierLabel(tine.tier)} · ${getThumbLabel(tine.thumb)}`;
+        const btn = tineDomMap.get(tine.id);
+        if (btn && state.appMode !== 'tune') btn.classList.add('is-tuned');
+      } else {
+        els.tunerKalimbaPos.textContent = '41音音域外 (F3〜F6)';
+      }
+
+      // 2) Dedicated Target-Locked 41-Key Tuning Studio Mode
+      if (state.appMode === 'tune' && state.tuneOrder.length) {
+        if (state.tuneSimCents !== null) {
+          state.tuneSimCents = null;
+          updateTuneSimButtonsUI();
+        }
+        // Light frequency smoothing when consecutive readings are close (reduces needle jitter)
+        if (state.tuneSmoothedFreq > 0 && Math.abs(1200 * Math.log2(freq / state.tuneSmoothedFreq)) < 90) {
+          state.tuneSmoothedFreq = state.tuneSmoothedFreq * 0.55 + freq * 0.45;
+        } else {
+          state.tuneSmoothedFreq = freq;
+        }
+        state.tuneLastHeardMs = Date.now();
+
+        const targetTine = state.tuneOrder[state.tuneIdx];
+        const diffCents = renderTuneStudioReading(state.tuneSmoothedFreq, 'live');
+
+        if (diffCents !== null && Math.abs(diffCents) <= 6) {
+          const nowMs = Date.now();
+          if (!state.tuneStableStartMs) state.tuneStableStartMs = nowMs;
+          else if (nowMs - state.tuneStableStartMs >= 420 && !state.tunedDoneSet.has(targetTine.id)) {
+            state.tuneStableStartMs = 0;
+            markCurrentTuneDone(true);
+          }
+        } else {
+          state.tuneStableStartMs = 0;
+        }
+      }
+
+      // 3) Wait-mode auto-advance (Practice Mode only)
+      if (state.appMode === 'practice' && state.practiceMode === 'wait' && state.melodyNotes.length && state.currentNoteIdx < state.melodyNotes.length) {
+        const target = state.melodyNotes[state.currentNoteIdx];
+        if (midi === target.midi && absC <= 22) {
+          const nowMs = Date.now();
+          if (nowMs - state.lastWaitAdvanceMs > 380) {
+            state.lastWaitAdvanceMs = nowMs;
+            if (state.currentNoteIdx < state.melodyNotes.length - 1) {
+              state.currentNoteIdx++;
+              state.songTime = state.melodyNotes[state.currentNoteIdx].time;
+              updateDisplayForIndex(state.currentNoteIdx);
+              els.statusBar.textContent = `✨ OK! 次のキー: ${state.melodyNotes[state.currentNoteIdx].numLabel} (${state.melodyNotes[state.currentNoteIdx].name.replace('#', '♯')})`;
+            } else {
+              els.statusBar.textContent = '🎉 全音クリア！素晴らしい演奏でした！';
+            }
+          }
+        }
+      }
+    } else if (state.appMode === 'tune') {
+      state.tuneStableStartMs = 0;
+      // Hold the last measured reading after note decay so user has time to read & tap with hammer
+      if (state.tuneSmoothedFreq > 0 && state.tuneSimCents === null && state.tuneLastHeardMs > 0) {
+        if (Date.now() - state.tuneLastHeardMs > 450 && els.tuneLiveDot.classList.contains('live')) {
+          els.tuneLiveDot.className = 'tune-live-dot hold';
+          els.tuneLiveStatusText.textContent = '直前の結果';
+        }
+      }
+    }
+    requestAnimationFrame(runTunerLoop);
+  }
+
+  /* =========================================================================
+   * 11.5. DEDICATED 41-KEY TUNING MODE & KALIMBA DEMO MODE CONTROLLERS
+   * ========================================================================= */
+  function initTuneOrder() {
+    // Ascending pitch order within each tier: Mid 17 (C4..E6) -> Low 7 (F3..B3) -> Top 17 (C#4..F6)
+    const midSorted = ALL_TINES.filter(t => t.tier === 'mid').sort((a, b) => a.midi - b.midi);
+    const lowSorted = ALL_TINES.filter(t => t.tier === 'low').sort((a, b) => a.midi - b.midi);
+    const topSorted = ALL_TINES.filter(t => t.tier === 'top').sort((a, b) => a.midi - b.midi);
+    state.tuneOrder = [...midSorted, ...lowSorted, ...topSorted];
+    state.tuneIdx = 0;
+  }
+
+  function refreshTuneBoardVisuals() {
+    tineDomMap.forEach((btn, id) => {
+      btn.classList.remove('is-tune-target');
+      btn.classList.toggle('is-tune-done', state.appMode === 'tune' && state.tunedDoneSet.has(id));
+    });
+    if (state.appMode !== 'tune' || !state.tuneOrder.length) return;
+
+    const cur = state.tuneOrder[state.tuneIdx];
+    const btn = tineDomMap.get(cur.id);
+    if (btn) btn.classList.add('is-tune-target');
+
+    els.tuneTargetBadge.className = `tune-target-badge tier-${cur.tier}`;
+    els.tuneTargetBadge.innerHTML = buildNumHtmlForMidi(cur.midi);
+    els.tuneTargetName.textContent = `${getTierLabel(cur.tier)}：${cur.noteName.replace('#', '♯')}（${cur.kanaLabel}）${cur.isDup ? ' ※中段と同音' : ''}`;
+    els.tuneTargetFreq.textContent = `目標ピッチ: ${midiToFreq(cur.midi).toFixed(1)} Hz（${state.tuneIdx + 1} / 41 本目 · ${getThumbLabel(cur.thumb)}）`;
+
+    const isDone = state.tunedDoneSet.has(cur.id);
+    els.tuneMarkDoneBtn.textContent = isDone ? '↩ 完了を外す' : '✓ 完了にする';
+    els.tuneProgressPill.textContent = `完了: ${state.tunedDoneSet.size} / 41 本`;
+
+    if (state.tuneSimCents !== null) {
+      const simFreq = midiToFreq(cur.midi) * Math.pow(2, state.tuneSimCents / 1200);
+      renderTuneStudioReading(simFreq, 'sim');
+    } else if (state.tuneSmoothedFreq <= 0) {
+      renderTuneStudioReading(0, 'idle');
+    }
+  }
+
+  function selectTuneIndex(idx, playRef = true) {
+    if (!state.tuneOrder.length) return;
+    state.tuneIdx = ((idx % state.tuneOrder.length) + state.tuneOrder.length) % state.tuneOrder.length;
+    state.tuneStableStartMs = 0;
+    state.tuneSmoothedFreq = 0;
+    state.tuneLastHeardMs = 0;
+    refreshTuneBoardVisuals();
+    const cur = state.tuneOrder[state.tuneIdx];
+    if (playRef) playKalimbaNote(cur.midi, 0, 0.9, 0.9);
+  }
+
+  function markCurrentTuneDone(fromAutoDetect = false) {
+    if (!state.tuneOrder.length) return;
+    const cur = state.tuneOrder[state.tuneIdx];
+    if (fromAutoDetect) {
+      state.tunedDoneSet.add(cur.id);
+      playKalimbaNote(cur.midi + 12 <= 96 ? cur.midi + 12 : cur.midi, 0, 0.35, 0.4);
+    } else {
+      if (state.tunedDoneSet.has(cur.id)) state.tunedDoneSet.delete(cur.id);
+      else state.tunedDoneSet.add(cur.id);
+    }
+    refreshTuneBoardVisuals();
+    if (state.tunedDoneSet.size === 41) {
+      els.tuneGuidance.className = 'tune-guidance ok';
+      els.tuneGuidance.textContent = '🎉 全41本のチューニング完了！お疲れさまでした！';
+      return;
+    }
+    if (fromAutoDetect && els.tuneAutoNextCheck.checked) {
+      setTimeout(() => {
+        if (state.appMode === 'tune') selectTuneIndex(state.tuneIdx + 1, true);
+      }, 650);
+    }
+  }
+
+  function stopSweep41() {
+    state.sweepTimers.forEach(t => clearTimeout(t));
+    state.sweepTimers = [];
+    state.isSweeping = false;
+    if (els.sweep41Btn) els.sweep41Btn.textContent = '🎶 41音ぜんぶ聴く';
+    if (state.appMode !== 'tune') {
+      tineDomMap.forEach(btn => btn.classList.remove('is-active'));
+    }
+  }
+
+  function startSweep41() {
+    if (state.isSweeping) { stopSweep41(); return; }
+    stopPlayback();
+    stopPreview();
+    ensureAudioContext();
+    state.isSweeping = true;
+    els.sweep41Btn.textContent = '⏹ 試聴停止';
+
+    // Sweep ascending: Low 7 -> Mid 17 -> Top 17
+    const lowS = ALL_TINES.filter(t => t.tier === 'low').sort((a, b) => a.midi - b.midi);
+    const midS = ALL_TINES.filter(t => t.tier === 'mid').sort((a, b) => a.midi - b.midi);
+    const topS = ALL_TINES.filter(t => t.tier === 'top').sort((a, b) => a.midi - b.midi);
+    const seq = [...lowS, ...midS, ...topS];
+    const stepMs = 175;
+
+    els.statusBar.textContent = '🎶 41音クロマチック音域テスト再生中（下段7音 → 中段17音 → 上段17音）…';
+    seq.forEach((tine, i) => {
+      const tid = setTimeout(() => {
+        if (!state.isSweeping) return;
+        tineDomMap.forEach(b => b.classList.remove('is-active', 'is-next'));
+        const btn = tineDomMap.get(tine.id);
+        if (btn) {
+          btn.classList.add('is-active');
+        }
+        playKalimbaNote(tine.midi, 0, 0.85, 0.92);
+        els.hudNowPill.textContent = tine.numLabel;
+        els.hudNowPill.className = `hud-note-pill tier-${tine.tier}`;
+        els.hudNowBadges.innerHTML = `<span class="badge badge-${tine.tier}">${getTierLabel(tine.tier)}</span><span class="badge badge-thumb">${getThumbLabel(tine.thumb)}</span>`;
+        els.hudNowSub.textContent = `${tine.noteName.replace('#', '♯')} ／ ${tine.kanaLabel}（41音テスト ${i + 1}/41）`;
+      }, i * stepMs);
+      state.sweepTimers.push(tid);
+    });
+
+    const endTid = setTimeout(() => {
+      stopSweep41();
+      els.statusBar.textContent = '✨ 全41音の音域確認が完了しました！';
+      updateDisplayForIndex(state.currentNoteIdx, false);
+    }, seq.length * stepMs + 500);
+    state.sweepTimers.push(endTid);
+  }
+
+  function setAppMode(mode) {
+    stopPlayback();
+    stopPreview();
+    stopSweep41();
+    state.appMode = mode;
+
+    els.appModeNav.querySelectorAll('.mode-tab').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.appmode === mode);
+    });
+
+    const isTune = (mode === 'tune');
+    const isDemo = (mode === 'demo');
+
+    els.demoStudio.classList.toggle('open', isDemo);
+    els.tuneStudio.classList.toggle('open', isTune);
+    els.hudStrip.classList.toggle('hidden-section', isTune);
+    els.transportRow.classList.toggle('hidden-section', isTune);
+    els.ribbonWrap.classList.toggle('hidden-section', isTune);
+    els.waterfallWrap.classList.toggle('hidden', isTune || !state.showWaterfall);
+    if (isTune) els.tunerBar.classList.remove('open');
+
+    if (isTune) {
+      tineDomMap.forEach(btn => btn.classList.remove('is-active', 'is-next', 'is-tuned'));
+      refreshTuneBoardVisuals();
+      els.statusBar.textContent = '🔧 41本チューニングモード: 合わせたいキーをタップ（または前後ボタン）して、お手本音やマイクで確認できます。';
+    } else if (isDemo) {
+      tineDomMap.forEach(btn => btn.classList.remove('is-tune-target', 'is-tune-done'));
+      updateDisplayForIndex(state.currentNoteIdx, false);
+      els.statusBar.textContent = '✨ カリンバ実演デモモード: 「▶ 実演デモを再生」を押すと、現在の曲をカリンバ音色で自動演奏します。';
+    } else {
+      tineDomMap.forEach(btn => btn.classList.remove('is-tune-target', 'is-tune-done'));
+      updateDisplayForIndex(state.currentNoteIdx, false);
+      els.statusBar.textContent = '🎵 練習モード: 「▶ 再生」で練習をスタートできます。';
+    }
+  }
+
+  function updateBpmReadout() {
+    const baseBpm = state.midi ? state.midi.bpm : 100;
+    const effBpm = Math.round(baseBpm * (state.speedPercent / 100));
+    els.bpmReadout.textContent = `${state.speedPercent}% · ${effBpm} BPM`;
+    els.speedSliderVal.textContent = `${state.speedPercent}%`;
+    els.speedSlider.value = String(state.speedPercent);
+    els.speedPresets.querySelectorAll('.preset-chip').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.speed, 10) === state.speedPercent);
+    });
+  }
+
+  els.notationSeg.addEventListener('click', (e) => {
+    const btn = e.target.closest('.seg-btn');
+    if (!btn) return;
+    state.notationMode = btn.dataset.mode;
+    els.notationSeg.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b === btn));
+    refreshTineLabels();
+    renderScoreRibbon();
+    updateDisplayForIndex(state.currentNoteIdx, false);
+  });
+
+  els.practiceModeSeg.addEventListener('click', (e) => {
+    const btn = e.target.closest('.seg-btn');
+    if (!btn) return;
+    stopPlayback();
+    state.practiceMode = btn.dataset.pmode;
+    els.practiceModeSeg.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b === btn));
+    els.playBtn.disabled = (state.practiceMode === 'wait');
+    els.statusBar.textContent = state.practiceMode === 'wait'
+      ? '🛑 待ち受けモード: 光っているキーを実機で弾く（マイクON時）か、「次 ▶」キーで自分のペースで進めます。'
+      : '🎵 リズム再生モード: 「▶ 再生」で伴奏と落下ノーツに合わせて練習できます。';
+  });
+
+  els.waterfallToggleBtn.addEventListener('click', () => {
+    state.showWaterfall = !state.showWaterfall;
+    els.waterfallWrap.classList.toggle('hidden', !state.showWaterfall);
+    els.waterfallToggleBtn.textContent = state.showWaterfall ? '⬇ ノーツ落下: ON' : '⬇ ノーツ落下: OFF';
+  });
+
+  els.speedPresets.addEventListener('click', (e) => {
+    const btn = e.target.closest('.preset-chip');
+    if (!btn) return;
+    state.speedPercent = parseInt(btn.dataset.speed, 10);
+    updateBpmReadout();
+  });
+
+  els.speedSlider.addEventListener('input', (e) => {
+    state.speedPercent = parseInt(e.target.value, 10);
+    updateBpmReadout();
+  });
+
+  els.playBtn.addEventListener('click', togglePlay);
+  els.resetBtn.addEventListener('click', resetSong);
+  els.prevNoteBtn.addEventListener('click', () => jumpToNote(state.currentNoteIdx - 1));
+  els.nextNoteBtn.addEventListener('click', () => jumpToNote(state.currentNoteIdx + 1));
+
+  window.addEventListener('keydown', (e) => {
+    if (['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+    if (e.code === 'Space') {
+      e.preventDefault();
+      if (state.practiceMode === 'wait') jumpToNote(state.currentNoteIdx + 1);
+      else togglePlay();
+    } else if (e.code === 'ArrowRight') {
+      e.preventDefault(); jumpToNote(state.currentNoteIdx + 1);
+    } else if (e.code === 'ArrowLeft') {
+      e.preventDefault(); jumpToNote(state.currentNoteIdx - 1);
+    }
+  });
+
+  els.dropZone.addEventListener('click', () => els.fileInput.click());
+  els.fileInput.addEventListener('change', (e) => { if (e.target.files[0]) readUploadedMidi(e.target.files[0]); });
+  els.dropZone.addEventListener('dragover', (e) => { e.preventDefault(); els.dropZone.classList.add('dragover'); });
+  els.dropZone.addEventListener('dragleave', () => els.dropZone.classList.remove('dragover'));
+  els.dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    els.dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files[0]) readUploadedMidi(e.dataTransfer.files[0]);
+  });
+
+  function readUploadedMidi(file) {
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const parsed = parseMidiArrayBuffer(evt.target.result);
+        els.fileNameDisplay.textContent = `🎵 ${file.name}`;
+        loadMidiObject(parsed, file.name);
+        els.statusBar.textContent = `✅ 「${file.name}」を読み込みました！主旋律トラックを自動選択済みです。`;
+      } catch (err) {
+        els.statusBar.textContent = `⚠ MIDI読み込みエラー: ${err.message}`;
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  const CARRY_ON_MIDI_GZ_B64 = 'H4sIAAAAAAACA+1YbU9bVxJ+ElA3iqIQRVY3igIY1WINxhjcEzt2bpxrG7/GLqQm2SC5FWRTGuqUGLRKIF96xyjKh0pbzz/a/bx/Yv8Ju3PuudfXwCahXbXqyt/Gc+blmWfOmetzmuvPnwH4BBcwduFfzfX9DoA0jseixa39/cPw6m64eRj+89bh6639Z+HWy91wVC3HH3xzGH6w9WLn+6dbczh+OPaHlSkcJ+C6X87geOyPZjnc/ObFy2eHntcc/v7iaLNvb9CWY2Oinxchj4l+UYQiJvrVDeo6VVC3XxGpIlJRpKIrHT3UZqWNHaek/Xb07/zG0aaTxy+J7TvmJFYO7+xfB2dOhBwm+rY4DWksESwt/Bh2LHHLiCqDiX5ahDQmBhpr421eW7/HxtQWLNcvyd7YMel3hrP7eNKSIR3UpESTen/O3wjXmpMSwkqiKrkd23KqmOjXRagHNRURKrpdxrgkvSgFNT4cf8k0/u3az8zRkECNM43rslTXNtR1GpKjKWtNTAyEhghD/qcDBXK8s526bOqzAv1XIMWNn+AURzyej8dVEVa18Lc9LfhnezT6zj36jjbN6OvQDSeDJ/3S0+HI9lMzIDpmQHR23HmzV3cyWOxbrynlWMj2c53eLZkyK/30Hr1x0qDtfqbTu+JkQOvS9a5TlxqqMk+qOgJNORl82S9tm5RfmZRfmZTbJ1OuORlEJWXWsZCSlNck5Vo/vdeblZRZifpKUn7Xr++9uy8p9/6/i7M71HZshPqNPWo7DfTG+w9E9UCk2ja1nZpIFdFVRCqJXUmkokhFkeo/9Db0oVz9offYWcX1vr39vrAdP+yeDhvq10VVR6hfeE1tpzAcfkWkFZGqIlURGn1rz4mrtEGPnBI6Eu6RU0RnoKmIUDlT05RPTBODP5A3/4njsU9bL7f/Gi5s/aWzs/ttOFrd2v/+5e7hHP4xfrTJDUVdagDcFKEJ8KoIqwCvi7AO6nJLpJZIZlFLR5va7KE6oIfa70D/bspCE78ktu9Yl1jyifh1cNZFqAPckLUhTVWEqhZ+DFNV3GYUOC7qGYDiAE8rcEwU0wDFgNMWEQVeUtTlopJIJlEEoCWAioCk0Il/RvBZBU5K8JIS4OAvZHUWoCSoSyVAKqEvAI4qsJLVKEAKEhmcFkUMoLRvceAbuMEPTLhBJR54P7tv4QHmnAJXFNxOGPSUA6gC6E6ccp1S4HnPtaQrOdqkKYDmjWvJFDLqwW/fg7iGIVADx6Sk3HK1q9bGjUvVuLgLFimQ0tQHDYSLhED6k+CmruA0DaOu1yRTFd2hJO7oihKDqnSIkjLuMRNbFuY8vMsuTM4brJT3gM+55to0ryRzQ3BGNM4511JQDHAmTKyiF6s4wLdGSYTPxOdjqwR5THyQx6UzuVSC0Tqbx+WP4LEb3BUB/iKyeRsa/Jk8ZgMwNZfCo6UPAG2SwjVNmWC23P3v81r1yM6fxBsdwmugFU25FX1qbYG1pGHFzU6WU5tQxiNhPJKFAL7bWSmXupyx9LekTRmEdM3yTUkq+Pu9qUJ0G1OSJCcnwt/zYrhkuTQ2PBobg5K7fpm2cq3q6hotgTbJNhNGFoU6y+PAI0c4WLRdciQ2ZxMunzpBbtldqSv6lLJYoxwua7IXhc95mqdFlGnRBM+lxXqX8qCLnF2IUA7blMW2nkDitVQ2TJnBZyCFBeuaB4mTtQB9Qp0QwflljyWz30/Tl6UkLkp2dZo+e5g+tswnWGe000HaDsjGc581nzGPLRlxd01eXcxdN5dRmmHtKWMnrWODRQ1kEO68nkGDUgCI5s1bqJz0rJzMKYUG846m62i6jqbraLr+z6fr6vB0dY1WjdHHTdXi72eymr0TyKu3yUzBmwz6HviGZvDK/e9f0Oyv0QzC/lAQciOWC0i6acseMtfPFEVAWb3cUvSCIhjXcMRPNmZL4NiDM6iPiX+HjSUWaBq0wtOWdOYmxUB1msaV4GDjSds93HE1aBfP2XK3jdAk1k/cb2md5nCLJ70xEDfHoAnQpNRYHoxF2yVghWZAC0EGntIMrvoM2B9g4aqw8FTfTFpeQzy/iMeCGmZBmsLTBf9G/0yYuKKZCN7MX/5HfYFjlrmQT9vzQlKZY8vXxaFMMdwYYuuM8h5LeTfd8mxzvN5XmqUuicdzKU/uiNfcd4ZIWpfXpghCfonWR5ZHz2kalzisjCb45QpLk9XpJut2TZZPP2LM6Squ0ySOUjSHGyf7zJMtekyT6F0+7yvH0aZ55RAWy3TDXHGfcNwGZ+wDjqXB6fRNnS2Drzlqg5V91dxevza31is8WwYnywccKctM/MRcMPd5pgaO1xbM5XXKxF/kSBO81KSUWciaAL1b3jV6hadr4FiN3pibLG0blL0rJgqt82wTnGmSpb0y6EU4UgOna2/dwGncNAjIS/0lxwvgTOGAYxY4bYVNaU84aoGVdcmUtmtKu8izBfn+eaVdNwC3T5QWMfGjXmlZs5DySrvmlbZmSuvNeqVlPZSvvNK+49kaOFN7d9+URnujJv0emhQtg1WZ2gZZiFUNbNeoLY87ZKM3zp+XwffF5HOA7otmuQC+V6A2LQN0TzSJMviu2CT0t6w3znGditqGit44xzSL1DZk9MY52QLnWr1vzZ+FC5xugYut3mN5aaIirnO0AFaF88Irg++Vh+DVwHdrPrwQJ8vgnJi4mUM83wSnmtTWD0mps+Eu1MB3RLMA0B3RLNXAlmjcWRsaPf2Nnl9HPfBhuA8EtqJHPpfuse3wZ96tz/1D8og+M/843APZ+XCEWeOddv+hP/JQmtkxiHBb3zwDEW7ry9BHRJgz+TO63J/cdwCl55ku9TiBfwN18d+UYSUAAA==';
+
+  async function loadEmbeddedCarryOn() {
+    try {
+      if (typeof DecompressionStream === 'undefined') {
+        throw new Error('ブラウザが内蔵MIDIの解凍に対応していません。');
+      }
+      const binStr = atob(CARRY_ON_MIDI_GZ_B64);
+      const bytes = new Uint8Array(binStr.length);
+      for (let i = 0; i < binStr.length; i++) bytes[i] = binStr.charCodeAt(i);
+      const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+      const rawBuf = await new Response(stream).arrayBuffer();
+      const parsed = parseMidiArrayBuffer(rawBuf);
+      els.fileNameDisplay.textContent = '🎵 Carry On My Wayward Son (41音カリンバ専用版).mid';
+      // Track 1 = Hand-arranged 41-Key Kalimba Lead (284 notes, 100% in F3-F6!), Track 2 = Soft Backing
+      loadMidiObject(parsed, '🎸 Carry On（41音カリンバ版）', 1, false);
+      state.speedPercent = 80;
+      updateBpmReadout();
+      els.statusBar.textContent = '🎸 「Carry On（41音カリンバ専用版）」読込済（歌メロ＋ギターリフ＋間奏 全284音・F3〜F6 100%対応！）';
+    } catch (err) {
+      const fallback = buildDemoSong('pop');
+      loadMidiObject(fallback, fallback.title);
+      els.statusBar.textContent = '⚠ Carry Onの読み込みに失敗したためデモ曲を開きました: ' + err.message;
+    }
+  }
+
+  els.demoBtns.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-demo]');
+    if (!btn) return;
+    if (btn.dataset.demo === 'carryon') {
+      loadEmbeddedCarryOn();
+      return;
+    }
+    const demo = buildDemoSong(btn.dataset.demo);
+    els.fileNameDisplay.textContent = '📂 MIDIファイル (.mid) を選択 または ここにドロップ';
+    loadMidiObject(demo, demo.title);
+    state.speedPercent = 100;
+    updateBpmReadout();
+    els.statusBar.textContent = `🎹 内蔵曲「${demo.title}」を読み込みました。「▶ 再生」でスタート！`;
+  });
+
+  els.trackSelect.addEventListener('change', () => {
+    stopPreview();
+    state.selectedTrackIdx = parseInt(els.trackSelect.value, 10);
+    autoFitOctaveIfNeeded(false);
+    rebuildTrackNotes();
+  });
+
+  els.octaveShiftSelect.addEventListener('change', () => {
+    stopPreview();
+    state.octaveShift = parseInt(els.octaveShiftSelect.value, 10);
+    rebuildTrackNotes();
+  });
+
+  els.transposeSelect.addEventListener('change', () => {
+    stopPreview();
+    state.transpose = parseInt(els.transposeSelect.value, 10);
+    rebuildTrackNotes();
+  });
+
+  els.autoFitBtn.addEventListener('click', () => autoFitOctaveIfNeeded(true));
+  els.soloBtn.addEventListener('click', startSoloPreview);
+
+  els.thinningSelect.addEventListener('change', () => {
+    state.thinning = els.thinningSelect.value;
+    rebuildTrackNotes();
+  });
+
+  els.loopCheck.addEventListener('change', () => {
+    state.loopEnabled = els.loopCheck.checked;
+    state.loopStartIdx = state.currentNoteIdx;
+    updateRibbonLoopStyles();
+  });
+  els.loopCountInput.addEventListener('input', () => {
+    const v = parseInt(els.loopCountInput.value, 10);
+    if (v >= 2 && v <= 64) { state.loopCount = v; updateRibbonLoopStyles(); }
+  });
+
+  els.melodyVolSlider.addEventListener('input', (e) => {
+    const pct = parseInt(e.target.value, 10);
+    state.melodyVol = pct / 100;
+    els.melodyVolVal.textContent = `${pct}%`;
+  });
+  els.backingVolSlider.addEventListener('input', (e) => {
+    const pct = parseInt(e.target.value, 10);
+    state.backingVol = pct / 100;
+    els.backingVolVal.textContent = `${pct}%`;
+  });
+
+  els.tunerBtn.addEventListener('click', () => startTuner(false));
+  els.tunerStopBtn.addEventListener('click', stopTuner);
+
+  // 3-Mode Navigation Switcher
+  els.appModeNav.addEventListener('click', (e) => {
+    const btn = e.target.closest('.mode-tab[data-appmode]');
+    if (!btn) return;
+    setAppMode(btn.dataset.appmode);
+  });
+
+  // Demo Studio Listeners
+  els.demoPlayBtn.addEventListener('click', () => {
+    if (state.isPlaying) {
+      stopPlayback();
+      els.statusBar.textContent = '⏹ 実演デモを停止しました。';
+    } else {
+      startPlaybackNow();
+    }
+  });
+  els.sweep41Btn.addEventListener('click', startSweep41);
+  els.timbreSelect.addEventListener('change', () => {
+    state.timbre = els.timbreSelect.value;
+    playKalimbaNote(72, 0, 0.85, 0.9); // Instant C5 preview of selected timbre
+    els.statusBar.textContent = `🪵 音色を「${els.timbreSelect.options[els.timbreSelect.selectedIndex].text}」に変更しました。`;
+  });
+  els.demoStyleSeg.addEventListener('click', (e) => {
+    const btn = e.target.closest('.seg-btn[data-dstyle]');
+    if (!btn) return;
+    state.demoStyle = btn.dataset.dstyle;
+    els.demoStyleSeg.querySelectorAll('.seg-btn').forEach(b => b.classList.toggle('active', b === btn));
+  });
+
+  // Dedicated 41-Key Tuning Studio Listeners
+  els.tuneRefToneBtn.addEventListener('click', () => {
+    if (!state.tuneOrder.length) return;
+    const cur = state.tuneOrder[state.tuneIdx];
+    playKalimbaNote(cur.midi, 0, 0.95, 0.95);
+  });
+  els.tuneMicBtn.addEventListener('click', () => {
+    if (state.tunerActive) stopTuner();
+    else startTuner(true);
+  });
+  els.tunePrevBtn.addEventListener('click', () => selectTuneIndex(state.tuneIdx - 1, true));
+  els.tuneNextBtn.addEventListener('click', () => selectTuneIndex(state.tuneIdx + 1, true));
+  els.tuneStudio.addEventListener('click', (e) => {
+    const simBtn = e.target.closest('button[data-tunesim]');
+    if (simBtn) {
+      const raw = simBtn.dataset.tunesim;
+      if (raw === 'clear') {
+        state.tuneSimCents = null;
+        updateTuneSimButtonsUI();
+        renderTuneStudioReading(state.tuneSmoothedFreq > 0 ? state.tuneSmoothedFreq : 0, state.tuneSmoothedFreq > 0 ? 'hold' : 'idle');
+      } else {
+        const cents = Number(raw);
+        state.tuneSimCents = cents;
+        updateTuneSimButtonsUI();
+        if (state.tuneOrder.length) {
+          const cur = state.tuneOrder[state.tuneIdx];
+          const simFreq = midiToFreq(cur.midi) * Math.pow(2, cents / 1200);
+          renderTuneStudioReading(simFreq, 'sim');
+        }
+      }
+      return;
+    }
+    const jumpBtn = e.target.closest('button[data-tunejump]');
+    if (!jumpBtn) return;
+    const targetTier = jumpBtn.dataset.tunejump;
+    const idx = state.tuneOrder.findIndex(t => t.tier === targetTier);
+    if (idx >= 0) selectTuneIndex(idx, true);
+  });
+  els.tuneMarkDoneBtn.addEventListener('click', () => markCurrentTuneDone(false));
+  els.tuneResetDoneBtn.addEventListener('click', () => {
+    state.tunedDoneSet.clear();
+    state.tuneSimCents = null;
+    updateTuneSimButtonsUI();
+    refreshTuneBoardVisuals();
+    els.tuneGuidance.className = 'tune-guidance';
+    els.tuneGuidance.textContent = '調律チェックをリセットしました。1本目から確認できます。';
+  });
+
+  buildKalimbaBoard();
+  initTuneOrder();
+  loadEmbeddedCarryOn();
+  requestAnimationFrame(mainAnimationLoop);
+})();
+</script>
+</body>
+</html>
